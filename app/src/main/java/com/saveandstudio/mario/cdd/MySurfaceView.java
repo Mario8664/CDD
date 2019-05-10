@@ -1,27 +1,29 @@
 package com.saveandstudio.mario.cdd;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
+import android.graphics.*;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import com.saveandstudio.mario.cdd.GameBasic.Transform;
+import com.saveandstudio.mario.cdd.GameBasic.Vector3;
+import com.saveandstudio.mario.cdd.GameObjects.Card;
+
+import java.lang.annotation.Target;
 
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     //用于控制SurfaceView
     private SurfaceHolder surfaceHolder;
     //声明一个画笔
     private Paint paint;
-    //触摸的坐标
-    private int touchX = 10, touchY = 10;
     //声明一条线程
     private GameThread thread;
     //线程消亡的标识位
     private boolean flag;
+    private int touchX, touchY;
     //声明一个画布
     private Canvas canvas;
     //声明屏幕的宽高
@@ -48,6 +50,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         paint.setColor(getResources().getColor(R.color.colorPrimary));
         //设置焦点
         setFocusable(true);
+        //test
+        card = new Card(new Transform(Vector3.zero, 0, new Vector3(2,2,0), new Vector3(100, 100, 0)));
     }
 
 
@@ -64,23 +68,34 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     //绘图
-    public void render(Canvas canvas) {
+    private void render(Canvas canvas) {
         paint.setColor(getResources().getColor(R.color.colorPrimary));
         canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
         paint.setColor(getResources().getColor(R.color.colorAccent));
-        canvas.drawText("Touch", touchX, touchY, paint);
+        //
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        canvas.drawBitmap(bitmap,((Transform) card.getComponent(Transform.class)).getTransformMatrix(), null);
+        //canvas.drawCircle( touchX, touchY, 20, paint);
     }
 
     //触屏事件
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        touchX = (int) event.getX();
-        touchY = (int) event.getY();
+        touchX = (int)event.getX();
+        touchY = (int)event.getY();
         return true;
     }
 
+    Card card;
+
     //逻辑
     private void logic() {
+        //test
+        ((Transform)card.getComponent(Transform.class)).setPosition(new Vector3(touchX, touchY, 0));
+        float rotation = ((Transform)card.getComponent(Transform.class)).getRotation();
+        ((Transform)card.getComponent(Transform.class)).setRotation(rotation + 1);
+        ((Transform)card.getComponent(Transform.class)).Update();
+
     }
 
 
