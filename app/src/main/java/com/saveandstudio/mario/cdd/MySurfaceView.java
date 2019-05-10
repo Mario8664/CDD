@@ -101,8 +101,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
             }
         }
-        Log.d("Game", "??");
-        //surfaceHolder.getSurface().release();
         flag = false;
     }
 
