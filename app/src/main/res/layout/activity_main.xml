@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<android.support.v4.widget.DrawerLayout-->
+
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
+<android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+    <android.support.constraint.ConstraintLayout
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent">
+        <ImageView
+                android:layout_width="128dp"
+                android:layout_height="128dp" app:srcCompat="@mipmap/ic_launcher" android:id="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="136dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:layout_editor_absoluteX="128dp"/>
+        <TextView
+                android:text="@string/app_name_ch"
+                android:layout_height="wrap_content" android:id="@+id/textView" android:layout_width="wrap_content"
+                android:textSize="36sp"
+                android:textColor="@android:color/background_light"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/imageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        <Button android:layout_width="match_parent" android:layout_height="36dp"
+                android:text="开始游戏"
+                android:id="@+id/start_game"
+                android:background="@drawable/button"
+                android:textSize="18sp" android:textColor="@android:color/background_light"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="128dp"
+                android:layout_marginEnd="128dp" app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="59dp" app:layout_constraintTop_toBottomOf="@+id/textView"/>
+        <Button android:layout_width="match_parent" android:layout_height="36dp"
+                android:text="退出游戏"
+                android:id="@+id/exit_game"
+                android:background="@drawable/button"
+                android:textSize="18sp" android:textColor="@android:color/background_light"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="128dp"
+                android:layout_marginEnd="128dp" app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="100dp"
+                android:layout_marginTop="44dp" app:layout_constraintTop_toBottomOf="@+id/start_game"/>
+    </android.support.constraint.ConstraintLayout>
+    <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:theme="@style/Theme.AppCompat.NoActionBar"
+                app:contentInsetStart="0dp" app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name_ch"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@android:color/background_light"/>
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+</android.support.design.widget.CoordinatorLayout>

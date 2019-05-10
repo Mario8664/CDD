@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".GameActivity">
+
+    <com.saveandstudio.mario.cdd.MySurfaceView
+            android:layout_width="0dp"
+            android:layout_height="0dp" android:id="@+id/game_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/linearLayout">
+        <Button
+                android:text="新游戏"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" android:id="@+id/new_game" android:layout_weight="1"
+                android:textSize="24sp"
+                android:background="@drawable/main_game_button"/>
+        <Button
+                android:text="主菜单"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" android:id="@+id/main_menu" android:layout_weight="1"
+                android:textSize="24sp"
+                android:background="@drawable/main_game_button"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
