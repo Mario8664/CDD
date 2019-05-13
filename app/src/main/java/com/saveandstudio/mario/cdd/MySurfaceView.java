@@ -4,15 +4,13 @@ import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import com.saveandstudio.mario.cdd.GameBasic.Transform;
-import com.saveandstudio.mario.cdd.GameBasic.Vector3;
-import com.saveandstudio.mario.cdd.GameObjects.Card;
+import com.saveandstudio.mario.cdd.GameBasic.*;
+import com.saveandstudio.mario.cdd.Scenes.Scene;
 
-import java.lang.annotation.Target;
+import java.util.Collections;
 
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     //用于控制SurfaceView
@@ -28,6 +26,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private Canvas canvas;
     //声明屏幕的宽高
     private int screenW, screenH;
+    //surfaceView的宽高
+    private int viewW, viewH;
     private long frameDeltaTime;
 
 
@@ -41,19 +41,25 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     public MySurfaceView(Context context, @Nullable AttributeSet attributeSet, int defferentStyleAttribute) {
         super(context, attributeSet, defferentStyleAttribute);
-
+        Global.surfaceContext = context;
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
 
         paint = new Paint();
 
         paint.setColor(getResources().getColor(R.color.colorPrimary));
+        Scene.prePareScene();
+        Scene.Start();
         //设置焦点
         setFocusable(true);
-        //test
-        card = new Card(new Transform(Vector3.zero, 0, new Vector3(2,2,0), new Vector3(100, 100, 0)));
     }
 
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        screenW = getWidth();
+        screenH = getHeight();
+    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -69,13 +75,21 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     //绘图
     private void render(Canvas canvas) {
+        //test
         paint.setColor(getResources().getColor(R.color.colorPrimary));
         canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
-        paint.setColor(getResources().getColor(R.color.colorAccent));
-        //
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        canvas.drawBitmap(bitmap,((Transform) card.getComponent(Transform.class)).getTransformMatrix(), null);
-        //canvas.drawCircle( touchX, touchY, 20, paint);
+//        paint.setColor(getResources().getColor(R.color.colorAccent));
+//        canvas.drawCircle( touchX, touchY, 50, paint);
+//        paint.setColor(Color.parseColor("#EE0000"));
+//        canvas.drawCircle(screenW, screenH, 100, paint);
+        if(Renderer.renderersList != null){
+            //sort
+            Collections.sort(Renderer.renderersList);
+            //render
+            for (int i = 0; i < Renderer.renderersList.size(); i++) {
+                Renderer.renderersList.get(i).Draw(canvas, paint);
+            }
+        }
     }
 
     //触屏事件
@@ -86,16 +100,21 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return true;
     }
 
-    Card card;
 
     //逻辑
     private void logic() {
-        //test
-        ((Transform)card.getComponent(Transform.class)).setPosition(new Vector3(touchX, touchY, 0));
-        float rotation = ((Transform)card.getComponent(Transform.class)).getRotation();
-        ((Transform)card.getComponent(Transform.class)).setRotation(rotation + 1);
-        ((Transform)card.getComponent(Transform.class)).Update();
-
+        //Update input
+        if(Input.touchPosition != null){
+            Input.touchPosition = new Vector2(touchX, touchY);
+        }
+        //Instantiate
+        Scene.InstantiateStart();
+        //Update
+        if(Scene.gameObjectsList != null){
+            for (int i = 0; i < Scene.gameObjectsList.size(); i++) {
+                Scene.gameObjectsList.get(i).Update();
+            }
+        }
     }
 
 
@@ -114,6 +133,15 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 retry = false;
             } catch (InterruptedException e) {
 
+            }
+        }
+        Scene.Clear();
+        if(Renderer.renderersList != null){
+            //sort
+            Collections.sort(Renderer.renderersList);
+            //render
+            for (int i = 0; i < Renderer.renderersList.size(); i++) {
+                Renderer.renderersList.get(i).Destroy();
             }
         }
         flag = false;
