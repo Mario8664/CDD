@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -22,13 +23,16 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     //线程消亡的标识位
     private boolean flag;
     private int touchX, touchY;
+    private boolean touching;
+    private boolean touchDown = false;
+    private boolean touchUp = true;
     //声明一个画布
     private Canvas canvas;
     //声明屏幕的宽高
     private int screenW, screenH;
-    //surfaceView的宽高
-    private int viewW, viewH;
-    private long frameDeltaTime;
+    //surfaceView的宽高比
+    private int viewW = 9, viewH = 16;
+    private long frameDeltaTime = 16;
 
 
     public MySurfaceView(Context context) {
@@ -44,12 +48,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         Global.surfaceContext = context;
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
-
         paint = new Paint();
 
         paint.setColor(getResources().getColor(R.color.colorPrimary));
         Scene.prePareScene();
-        Scene.Start();
         //设置焦点
         setFocusable(true);
     }
@@ -58,7 +60,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         screenW = getWidth();
-        screenH = getHeight();
+        screenH = (int) ((float) screenW / (float) viewW * (float) viewH);
+        surfaceHolder.setFixedSize(screenW, screenH);
     }
 
     @Override
@@ -82,7 +85,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 //        canvas.drawCircle( touchX, touchY, 50, paint);
 //        paint.setColor(Color.parseColor("#EE0000"));
 //        canvas.drawCircle(screenW, screenH, 100, paint);
-        if(Renderer.renderersList != null){
+        if (Renderer.renderersList != null) {
             //sort
             Collections.sort(Renderer.renderersList);
             //render
@@ -95,26 +98,58 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     //触屏事件
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        touchX = (int)event.getX();
-        touchY = (int)event.getY();
+        touchX = (int) event.getX();
+        touchY = (int) event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                touchDown = true;
+                touching = true;
+                return true;
+            case MotionEvent.ACTION_UP:
+                touchUp = true;
+                touching = false;
+                return true;
+            default:
+
+        }
         return true;
     }
 
 
     //逻辑
     private void logic() {
-        //Update input
-        if(Input.touchPosition != null){
-            Input.touchPosition = new Vector2(touchX, touchY);
-        }
-        //Instantiate
+        //Update screen info
+        GameViewInfo.screenW = screenW;
+        GameViewInfo.screenH = screenH;
+        updateInput();
+        //Start
         Scene.InstantiateStart();
         //Update
-        if(Scene.gameObjectsList != null){
+        if (Scene.gameObjectsList != null) {
             for (int i = 0; i < Scene.gameObjectsList.size(); i++) {
                 Scene.gameObjectsList.get(i).Update();
             }
         }
+    }
+
+    private void updateInput(){
+        //Update input
+        if (Input.touchPosition != null) {
+            Input.touchPosition = new Vector2((float) touchX / GameViewInfo.screenW * GameViewInfo.fixedW,
+                    (float) touchY / GameViewInfo.screenH * GameViewInfo.fixedH);
+            Input.touching = touching;
+            Input.touchDown = false;
+            Input.touchUp = false;
+            if(touchDown){
+                Input.touchDown = true;
+                touchDown = false;
+            }
+            if(touchUp){
+                Input.touchUp = true;
+                touchUp = false;
+            }
+        }
+
     }
 
 
@@ -133,15 +168,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 retry = false;
             } catch (InterruptedException e) {
 
-            }
-        }
-        Scene.Clear();
-        if(Renderer.renderersList != null){
-            //sort
-            Collections.sort(Renderer.renderersList);
-            //render
-            for (int i = 0; i < Renderer.renderersList.size(); i++) {
-                Renderer.renderersList.get(i).Destroy();
             }
         }
         flag = false;
@@ -168,6 +194,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         @Override
         public void run() {
             while (run) {
+                logic();
                 try {
                     canvas = surfaceHolder.lockCanvas(null);
                     if (canvas != null) {
@@ -181,12 +208,14 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     }
                 }
-                logic();
                 long start = System.currentTimeMillis();
                 long end = System.currentTimeMillis();
                 try {
                     if (end - start < frameDeltaTime) {
                         Thread.sleep(frameDeltaTime - (end - start));
+                        GameViewInfo.deltaTime = (float) frameDeltaTime / 1000;
+                    } else {
+                        GameViewInfo.deltaTime = (float) (end - start) / 1000;
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

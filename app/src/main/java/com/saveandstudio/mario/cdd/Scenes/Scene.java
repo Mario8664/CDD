@@ -21,7 +21,6 @@ public class Scene {
         gameObject.addComponent(new BoxCollider());
         gameObject.addComponent(new AutoCollider());
         gameObject.addComponent(new TouchTest());
-        gameObject.Destroy(3);
     }
 
     public static void InstantiateStart() {

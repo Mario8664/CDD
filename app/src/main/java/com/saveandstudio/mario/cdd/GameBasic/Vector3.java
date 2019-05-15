@@ -35,8 +35,13 @@ public class Vector3 implements Cloneable{
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected Vector3 clone(){
         Vector3 vector3 = new Vector3(x, y, z);
         return vector3;
+    }
+
+    @Override
+    public String toString() {
+        return new String(Float.toString(x) + "," + Float.toString(y) + "," + Float.toString(z));
     }
 }

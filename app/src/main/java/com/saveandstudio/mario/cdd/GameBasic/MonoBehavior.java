@@ -4,9 +4,8 @@ public class MonoBehavior {
 
     public GameObject gameObject;
 
-    protected MonoBehavior()
-    {
-        Start();
+    protected void Awake(){
+
     }
 
     protected void Start(){

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Vector2 extends Vector3 implements Cloneable{
 
+    public static Vector2 zero = new Vector2(0,0), one = new Vector2(1,1);
     private float z;
 
     public Vector2()
@@ -34,7 +35,13 @@ public class Vector2 extends Vector3 implements Cloneable{
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return (Vector2)super.clone();
+    protected Vector2 clone(){
+        Vector2 vector2 = new Vector2(x, y);
+        return vector2;
+    }
+
+    @Override
+    public String toString() {
+        return new String(Float.toString(x) + "," + Float.toString(y));
     }
 }

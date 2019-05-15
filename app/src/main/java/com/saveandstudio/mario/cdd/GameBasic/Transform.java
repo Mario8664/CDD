@@ -13,7 +13,7 @@ public class Transform extends MonoBehavior{
     private Vector3 scale = new Vector3();
     private Vector3 localScale = new Vector3();
     private Vector3 pivot = new Vector3();
-    private Matrix transformMatrix = new Matrix();
+    Matrix transformMatrix = new Matrix();
     private Transform parent;
     private ArrayList<Transform> children = new ArrayList<>();
 
@@ -39,25 +39,25 @@ public class Transform extends MonoBehavior{
         this(position, rotation, world, localScale, pivot);
     }
     public Transform(Vector3 position, float rotation, Transform parent, Vector3 localScale, Vector3 pivot){
-        this.position = position;
+        this.position = position.clone();
         this.localPosition = position.minus(parent.getPosition());
         this.rotation = rotation;
         this.localRotation = rotation - parent.rotation;
-        this.localScale = localScale;
+        this.localScale = localScale.clone();
         this.scale = localScale.multiply(parent.getScale());
-        this.pivot = pivot;
+        this.pivot = pivot.clone();
         updateMatrix();
         this.parent = parent;
         this.parent.addChildren(this);
     }
     public Transform(Vector3 localPosition, float localRotation, Vector3 localScale, Transform parent, Vector3 pivot){
         this.position = localPosition.add(parent.position);
-        this.localPosition = localPosition;
+        this.localPosition = localPosition.clone();
         this.rotation = localRotation + parent.rotation;
         this.localRotation = localRotation;
-        this.localScale = localScale;
+        this.localScale = localScale.clone();
         this.scale = localScale.multiply(parent.getScale());
-        this.pivot = pivot;
+        this.pivot = pivot.clone();
         updateMatrix();
         this.parent = parent;
         this.parent.addChildren(this);
@@ -94,10 +94,6 @@ public class Transform extends MonoBehavior{
         return scale;
     }
 
-    public Matrix getTransformMatrix() {
-        return transformMatrix;
-    }
-
     //Set transform
 
     public void setParent(Transform parent) {
@@ -108,13 +104,13 @@ public class Transform extends MonoBehavior{
     }
 
     public void setPosition(Vector3 position) {
-        this.position = position;
+        this.position = position.clone();
         this.localPosition = position.minus(parent.getPosition());
         updateMatrix();
     }
 
     public void setLocalPosition(Vector3 localPosition) {
-        this.localPosition = localPosition;
+        this.localPosition = localPosition.clone();
         this.position = localPosition.add(parent.getPosition());
         updateMatrix();
     }
@@ -132,15 +128,25 @@ public class Transform extends MonoBehavior{
     }
 
     public void setLocalScale(Vector3 localScale) {
-        this.localScale = localScale;
+        this.localScale = localScale.clone();
         this.scale = localScale.multiply(parent.getScale());
         updateMatrix();
     }
 
+    public void setPivot(Vector3 pivot) {
+        this.pivot = pivot.clone();
+        updateMatrix();
+    }
+
     private void updateMatrix(){
-        transformMatrix.setTranslate(position.x, position.y);
+
+        transformMatrix.setTranslate(position.x * GameViewInfo.screenW / GameViewInfo.fixedW - pivot.x ,
+                position.y * GameViewInfo.screenH / GameViewInfo.fixedH - pivot.y);
         transformMatrix.preRotate(rotation, pivot.x, pivot.y);
-        transformMatrix.preScale(scale.x, scale.y, pivot.x, pivot.y);
+        transformMatrix.preScale(scale.x,
+                scale.y,
+                pivot.x,
+                pivot.y);
     }
 
     public void Update(){

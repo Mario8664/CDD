@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 if (about_hint != null) {
                     about_hint.cancel();
                 }
-                about_hint = Toast.makeText(MainActivity.this, "别做锄大地了", Toast.LENGTH_SHORT);
+                about_hint = Toast.makeText(MainActivity.this, "Save& Studio 出品", Toast.LENGTH_SHORT);
                 about_hint.show();
                 break;
             default:
