@@ -49,6 +49,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        hideNavigationBar();
+    }
+
+    @Override
     public void onBackPressed() {
         finish();
         overridePendingTransition(R.anim.anim_in, R.anim.anim_out);
@@ -60,12 +66,7 @@ public class GameActivity extends AppCompatActivity {
         Scene.Clear();
         Physics.Clear();
         if (Renderer.renderersList != null) {
-            //sort
-            Collections.sort(Renderer.renderersList);
-            //render
-            for (int i = 0; i < Renderer.renderersList.size(); i++) {
-                Renderer.renderersList.get(i).Destroy();
-            }
+            Renderer.renderersList.clear();
         }
     }
 
