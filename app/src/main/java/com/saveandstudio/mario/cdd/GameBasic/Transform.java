@@ -13,7 +13,7 @@ public class Transform extends MonoBehavior{
     private Vector3 scale = new Vector3();
     private Vector3 localScale = new Vector3();
     private Vector3 pivot = new Vector3();
-    Matrix transformMatrix = new Matrix();
+    public Matrix transformMatrix = new Matrix();
     private Transform parent;
     private ArrayList<Transform> children = new ArrayList<>();
 
@@ -94,6 +94,10 @@ public class Transform extends MonoBehavior{
         return scale;
     }
 
+    public Vector3 getPivot() {
+        return pivot;
+    }
+
     //Set transform
 
     public void setParent(Transform parent) {
@@ -133,12 +137,24 @@ public class Transform extends MonoBehavior{
         updateMatrix();
     }
 
+    public void setScale(Vector3 scale) {
+        this.scale = scale;
+        this.localScale = scale.divide(parent.getScale());
+        updateMatrix();
+    }
+
     public void setPivot(Vector3 pivot) {
         this.pivot = pivot.clone();
         updateMatrix();
     }
 
     private void updateMatrix(){
+
+        if(parent != null){
+            position = localPosition.add(parent.getPosition());
+            rotation = localRotation + parent.getRotation();
+            scale = localScale.multiply(parent.getScale());
+        }
 
         transformMatrix.setTranslate(position.x * GameViewInfo.screenW / GameViewInfo.fixedW - pivot.x ,
                 position.y * GameViewInfo.screenH / GameViewInfo.fixedH - pivot.y);

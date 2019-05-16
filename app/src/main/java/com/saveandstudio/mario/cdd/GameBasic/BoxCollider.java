@@ -43,12 +43,12 @@ public class BoxCollider extends MonoBehavior implements Comparable<BoxCollider>
         float aZ = ((Transform)getComponent(Transform.class)).getPosition().z;
         float bZ = ((Transform)b.getComponent(Transform.class)).getPosition().z;
         if(aZ > bZ){
-            return 1;
+            return -1;
         }
         else if(aZ == bZ){
             return 0;
         }
         else
-            return -1;
+            return 1;
     }
 }

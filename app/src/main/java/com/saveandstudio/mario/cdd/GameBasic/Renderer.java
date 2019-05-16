@@ -4,8 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import com.saveandstudio.mario.cdd.R;
 
 import java.util.ArrayList;
 
@@ -13,15 +16,16 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
 
     static public ArrayList<Renderer> renderersList = new ArrayList<>();
 
+    protected Transform transform;
     private Bitmap bitmapResource;
-    public int bitMapHeight, bitMapWidth;
+    private int bitMapHeight, bitMapWidth;
     private int bitmapId;
-    private float zDepth;
+    protected float zDepth;
     private boolean set = false;
 
-//    public Renderer(){
-//        this(R.mipmap.default_sprite);
-//    }
+    public Renderer(){
+        this(R.mipmap.default_sprite);
+    }
 
     public Renderer(int id) {
         bitmapId = id;
@@ -39,7 +43,7 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
 
     public void Draw(Canvas canvas, Paint paint) {
 
-        Transform transform = (Transform) getComponent(Transform.class);
+        transform = (Transform) getComponent(Transform.class);
         if (transform != null) {
             if (bitmapResource == null) {
                 if (Global.surfaceContext != null) {
@@ -77,5 +81,13 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
 
     public void Destroy() {
         renderersList.remove(this);
+    }
+
+    public int getBitMapWidth() {
+        return bitMapWidth;
+    }
+
+    public int getBitMapHeight() {
+        return bitMapHeight;
     }
 }

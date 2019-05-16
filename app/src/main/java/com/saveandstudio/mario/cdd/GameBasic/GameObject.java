@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class GameObject {
 
     private ArrayList<MonoBehavior> components;
-    boolean toBeDestroy;
+    public boolean toBeDestroy;
 
     public GameObject(Transform transform){
         if(Scene.gameObjectsList == null){

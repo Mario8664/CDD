@@ -1,21 +1,23 @@
 package com.saveandstudio.mario.cdd.Components;
 
 import com.saveandstudio.mario.cdd.GameBasic.*;
+import com.saveandstudio.mario.cdd.Renderers.CardRenderer;
 
 public class AutoPivot extends MonoBehavior {
     private Transform transform;
-    private Renderer renderer;
+    private CardRenderer renderer;
 
     @Override
     public void Start() {
         transform = (Transform)getComponent(Transform.class);
-        renderer = (Renderer) getComponent(Renderer.class);
+        renderer = (CardRenderer) getComponent(CardRenderer.class);
     }
 
     @Override
     public void Update() {
         if(renderer != null){
-            transform.setPivot(new Vector3((float) renderer.bitMapWidth / 2, (float) renderer.bitMapHeight / 2, 0));
+            transform.setPivot(new Vector3((float) renderer.getBitMapWidth() / 2, (float) renderer.getBitMapHeight() / 2, 0));
+            //transform.setRotation(transform.getRotation() + 100 * GameViewInfo.deltaTime);
         }
     }
 }

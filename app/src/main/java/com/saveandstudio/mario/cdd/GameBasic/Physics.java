@@ -17,13 +17,13 @@ public class Physics {
                 Vector2 offset = collider.getOffset();
                 Vector2 size = collider.getSize();
                 if(ray.x < transform.getPosition().x + offset.x - size.x / 2 )
-                    break;
+                    continue;
                 if(ray.x > transform.getPosition().x + offset.x + size.x / 2 )
-                    break;
+                    continue;
                 if(ray.y < transform.getPosition().y + offset.y - size.y / 2 )
-                    break;
+                    continue;
                 if(ray.y > transform.getPosition().y + offset.y + size.y / 2 )
-                    break;
+                    continue;
                 return collider;
             }
         }

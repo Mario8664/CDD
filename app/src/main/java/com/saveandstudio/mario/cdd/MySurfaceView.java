@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -81,10 +80,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         //test
         paint.setColor(getResources().getColor(R.color.colorPrimary));
         canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
-//        paint.setColor(getResources().getColor(R.color.colorAccent));
-//        canvas.drawCircle( touchX, touchY, 50, paint);
-//        paint.setColor(Color.parseColor("#EE0000"));
-//        canvas.drawCircle(screenW, screenH, 100, paint);
         if (Renderer.renderersList != null) {
             //sort
             Collections.sort(Renderer.renderersList);
@@ -137,6 +132,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         if (Input.touchPosition != null) {
             Input.touchPosition = new Vector2((float) touchX / GameViewInfo.screenW * GameViewInfo.fixedW,
                     (float) touchY / GameViewInfo.screenH * GameViewInfo.fixedH);
+        }
             Input.touching = touching;
             Input.touchDown = false;
             Input.touchUp = false;
@@ -148,7 +144,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 Input.touchUp = true;
                 touchUp = false;
             }
-        }
 
     }
 

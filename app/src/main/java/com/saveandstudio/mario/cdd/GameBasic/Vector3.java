@@ -31,6 +31,9 @@ public class Vector3 implements Cloneable{
     }
 
     public Vector3 divide(Vector3 vector3){
+        vector3.x = Math.max((float) 0.0001, vector3.x);
+        vector3.y = Math.max((float) 0.0001, vector3.y);
+        vector3.z = Math.max((float) 0.0001, vector3.z);
         return new Vector3(x / vector3.x, y / vector3.y, z / vector3.z);
     }
 
