@@ -11,7 +11,7 @@ public class CardRenderer extends Renderer {
     private Transform transform;
     private Bitmap suit, background, cardBack, figure;
     private int suitID, backgroundID, cardBackID, figureID;
-    private boolean side = false;
+    private boolean side = true;
     private int bitMapHeight, bitMapWidth;
 
 
@@ -34,11 +34,16 @@ public class CardRenderer extends Renderer {
         this.side = side;
     }
 
+    public void setCardID(int suitID, int figureID){
+        this.suitID = suitID;
+        this.figureID = figureID;
+    }
+
     @Override
     public void Draw(Canvas canvas, Paint paint) {
-
-        transform = (Transform) getComponent(Transform.class);
-        if (transform != null) {
+        if (transform == null) {
+            transform = (Transform) getComponent(Transform.class);
+        } else {
             if (Global.surfaceContext != null) {
                 if (suit == null) {
                     suit = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), suitID);
@@ -60,19 +65,21 @@ public class CardRenderer extends Renderer {
             Vector3 pivot = transform.getPivot();
             Vector3 position = transform.getPosition();
             Vector3 scale = transform.getScale();
-            Log.d("Game", transform.transformMatrix.toString());
             if (side) {
-                transform.setPivot(new Vector3((float) background.getWidth() / 2, (float) background.getHeight() / 2, 0));
+                transform.
+                        setPivot(new Vector3((float) background.getWidth() / 2, (float) background.getHeight() / 2, 0));
                 canvas.drawBitmap(background, transform.transformMatrix, null);
                 transform.setPivot(new Vector3((float) suit.getWidth() / 2, (float) suit.getHeight() / 2, 0));
                 canvas.drawBitmap(suit, transform.transformMatrix, null);
                 //Draw figure
-                Vector3 distance = new Vector3(bitMapWidth, bitMapHeight, 0).divide(new Vector3(3, 5, 1)).multiply(scale);
-                transform.setPosition(position.minus(distance));
+                Vector3 distance = new Vector3(bitMapWidth, bitMapHeight, 0).divide(new Vector3(3, 5, 1)).
+                        multiply(new Vector3((float) 2.8, (float) 2.8, 1));
+                transform.setPivot(transform.getPivot().add(distance));
                 transform.setScale(scale.divide(new Vector3((float) 2.8, (float) 2.8, 1)));
                 canvas.drawBitmap(suit, transform.transformMatrix, null);
-                distance = new Vector3(bitMapWidth, bitMapHeight, 0).divide(new Vector3(3, (float)2.8, 1)).multiply(scale);
-                transform.setPosition(position.minus(distance));
+                distance = new Vector3(0, bitMapHeight, 0).divide(new Vector3(1, (float) 6, 1)).
+                        multiply(new Vector3((float) 2.8, (float) 2.8, 1));
+                transform.setPivot(transform.getPivot().add(distance));
                 canvas.drawBitmap(figure, transform.transformMatrix, null);
 
             } else {

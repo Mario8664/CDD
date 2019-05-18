@@ -5,6 +5,7 @@ import com.saveandstudio.mario.cdd.Components.AutoPivot;
 import com.saveandstudio.mario.cdd.Components.TransformToTarget;
 import com.saveandstudio.mario.cdd.Components.TouchEvents;
 import com.saveandstudio.mario.cdd.GameBasic.*;
+import com.saveandstudio.mario.cdd.Prefabs.Card;
 import com.saveandstudio.mario.cdd.R;
 import com.saveandstudio.mario.cdd.Renderers.CardRenderer;
 
@@ -16,30 +17,12 @@ public class Scene {
     public static ArrayList<GameObject> gameObjectsList;
 
     public static void prePareScene() {
-        GameObject card = new GameObject(new Transform(new Vector3(GameViewInfo.centerW-40, GameViewInfo.centerH + 300, 2), 0,
-                new Vector3((float) 1, (float)1, 0), Vector3.zero));
-        card.addComponent(new CardRenderer(R.mipmap.diamond, R.mipmap.red_three));
-        card.addComponent(new BoxCollider());
-        card.addComponent(new AutoCollider());
-        card.addComponent(new AutoPivot());
-        card.addComponent(new TransformToTarget());
-        card.addComponent(new TouchEvents());
-        GameObject card2 = new GameObject(new Transform(new Vector3(GameViewInfo.centerW, GameViewInfo.centerH + 300, 3), 0,
-                new Vector3((float) 1, (float)1, 0), Vector3.zero));
-        card2.addComponent(new CardRenderer(R.mipmap.spade, R.mipmap.black_two));
-        card2.addComponent(new BoxCollider());
-        card2.addComponent(new AutoCollider());
-        card2.addComponent(new AutoPivot());
-        card2.addComponent(new TransformToTarget());
-        card2.addComponent(new TouchEvents());
-        GameObject card3 = new GameObject(new Transform(new Vector3(GameViewInfo.centerW + 40, GameViewInfo.centerH + 300, 4), 0,
-                new Vector3((float) 1, (float)1, 0), Vector3.zero));
-        card3.addComponent(new CardRenderer(R.mipmap.heart, R.mipmap.red_joker));
-        card3.addComponent(new BoxCollider());
-        card3.addComponent(new AutoCollider());
-        card3.addComponent(new AutoPivot());
-        card3.addComponent(new TransformToTarget());
-        card3.addComponent(new TouchEvents());
+        Transform transform = new Transform(new Vector3(GameViewInfo.centerW, GameViewInfo.centerH + 300, 0), 0,
+                new Vector3((float) 1, (float)1, 0), Vector3.zero);
+        GameObject cardDesk = new GameObject(transform);
+        Card card = new Card(0, 0, new Transform(new Vector3(-40, 0, 2),0, Vector3.one,transform, Vector3.zero));
+        Card card2 = new Card(3, 12, new Transform(new Vector3(0, 0, 3),0, Vector3.one,transform, Vector3.zero));
+        Card card3 = new Card(2, 8, new Transform(new Vector3(40, 0, 4),0, Vector3.one,transform, Vector3.zero));
     }
 
     public static void InstantiateStart() {

@@ -17,7 +17,7 @@ public class Transform extends MonoBehavior{
     private Transform parent;
     private ArrayList<Transform> children = new ArrayList<>();
 
-    private Transform(Transform parent){
+    public Transform(Transform parent){
         position = Vector3.zero;
         localPosition = Vector3.zero;
         rotation = 0;
@@ -71,7 +71,7 @@ public class Transform extends MonoBehavior{
     }
 
     public Vector3 getPosition() {
-        return position;
+        return position.clone();
     }
 
     public float getRotation() {
@@ -79,7 +79,7 @@ public class Transform extends MonoBehavior{
     }
 
     public Vector3 getLocalPosition() {
-        return localPosition;
+        return localPosition.clone();
     }
 
     public float getLocalRotation() {
@@ -87,11 +87,11 @@ public class Transform extends MonoBehavior{
     }
 
     public Vector3 getLocalScale() {
-        return localScale;
+        return localScale.clone();
     }
 
     public Vector3 getScale() {
-        return scale;
+        return scale.clone();
     }
 
     public Vector3 getPivot() {

@@ -10,6 +10,10 @@ public class GameObject {
     private ArrayList<MonoBehavior> components;
     public boolean toBeDestroy;
 
+    public GameObject(){
+        this(new Transform());
+    }
+
     public GameObject(Transform transform){
         if(Scene.gameObjectsList == null){
             Scene.gameObjectsList = new ArrayList<>();
@@ -23,10 +27,11 @@ public class GameObject {
         components.add(transform);
     }
 
-    public void addComponent(MonoBehavior component){
+    public MonoBehavior addComponent(MonoBehavior component){
         components.add(component);
         component.gameObject = this;
         component.Awake();
+        return component;
     }
 
 

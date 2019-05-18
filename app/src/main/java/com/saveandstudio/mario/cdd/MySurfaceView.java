@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -32,7 +33,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     //surfaceView的宽高比
     private int viewW = 9, viewH = 16;
     private long frameDeltaTime = 16;
-
 
     public MySurfaceView(Context context) {
         this(context, null);
@@ -68,10 +68,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         screenW = this.getWidth();
         screenH = this.getHeight();
         flag = true;
-        //实例线程
+
         thread = new GameThread(getHolder(), this);
         thread.setRunning(true);
-        //启动线程
         thread.start();
     }
 
@@ -96,6 +95,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         touchX = (int) event.getX();
         touchY = (int) event.getY();
         switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                touching = true;
+                return true;
             case MotionEvent.ACTION_DOWN:
                 touchDown = true;
                 touching = true;
@@ -189,7 +191,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         @Override
         public void run() {
             while (run) {
-                logic();
+                    logic();
                 try {
                     canvas = surfaceHolder.lockCanvas(null);
                     if (canvas != null) {

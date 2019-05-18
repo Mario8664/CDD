@@ -23,7 +23,7 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
     protected float zDepth;
     private boolean set = false;
 
-    public Renderer(){
+    public Renderer() {
         this(R.mipmap.default_sprite);
     }
 
@@ -43,17 +43,18 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
 
     public void Draw(Canvas canvas, Paint paint) {
 
-        transform = (Transform) getComponent(Transform.class);
-        if (transform != null) {
+        if (transform == null) {
+            transform = (Transform) getComponent(Transform.class);
+        } else {
             if (bitmapResource == null) {
                 if (Global.surfaceContext != null) {
                     bitmapResource = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), bitmapId);
                     bitMapWidth = bitmapResource.getWidth();
                     bitMapHeight = bitmapResource.getHeight();
                 }
-            } else{
+            } else {
                 canvas.drawBitmap(bitmapResource, transform.transformMatrix, null);
-                if(set){
+                if (set) {
                     bitmapResource = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), bitmapId);
                     bitMapWidth = bitmapResource.getWidth();
                     bitMapHeight = bitmapResource.getHeight();
