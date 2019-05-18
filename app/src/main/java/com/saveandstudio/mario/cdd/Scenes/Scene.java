@@ -20,9 +20,11 @@ public class Scene {
         Transform transform = new Transform(new Vector3(GameViewInfo.centerW, GameViewInfo.centerH + 300, 0), 0,
                 new Vector3((float) 1, (float)1, 0), Vector3.zero);
         GameObject cardDesk = new GameObject(transform);
-        Card card = new Card(0, 0, new Transform(new Vector3(-40, 0, 2),0, Vector3.one,transform, Vector3.zero));
+        Card card = new Card(0, 3, new Transform(new Vector3(-40, 0, 2),0, Vector3.one,transform, Vector3.zero));
         Card card2 = new Card(3, 12, new Transform(new Vector3(0, 0, 3),0, Vector3.one,transform, Vector3.zero));
-        Card card3 = new Card(2, 8, new Transform(new Vector3(40, 0, 4),0, Vector3.one,transform, Vector3.zero));
+        Card card3 = new Card(2, 9, new Transform(new Vector3(40, 0, 4),0, Vector3.one,transform, Vector3.zero));
+        Card card4 = new Card(1, 7, new Transform(new Vector3(80, 0, 5),0, Vector3.one,transform, Vector3.zero));
+        Card card5 = new Card(2, 5, new Transform(new Vector3(120, 0, 6),0, Vector3.one,transform, Vector3.zero));
     }
 
     public static void InstantiateStart() {

@@ -13,6 +13,7 @@ public class CardRenderer extends Renderer {
     private int suitID, backgroundID, cardBackID, figureID;
     private boolean side = true;
     private int bitMapHeight, bitMapWidth;
+    private boolean set;
 
 
     public CardRenderer() {
@@ -24,6 +25,7 @@ public class CardRenderer extends Renderer {
     }
 
     public CardRenderer(int suit, int background, int cardBack, int figure) {
+        set = true;
         suitID = suit;
         backgroundID = background;
         cardBackID = cardBack;
@@ -34,9 +36,10 @@ public class CardRenderer extends Renderer {
         this.side = side;
     }
 
-    public void setCardID(int suitID, int figureID){
+    public void setCardID(int suitID, int figureID) {
         this.suitID = suitID;
         this.figureID = figureID;
+        set = true;
     }
 
     @Override
@@ -60,6 +63,18 @@ public class CardRenderer extends Renderer {
                     figure = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), figureID);
                 }
             }
+        }
+        if (set) {
+            if (Global.surfaceContext != null) {
+                suit = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), suitID);
+                background = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), backgroundID);
+                bitMapWidth = background.getWidth();
+                bitMapHeight = background.getHeight();
+                cardBack = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), cardBackID);
+                figure = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), figureID);
+            }
+            set = false;
+
         }
         if (suit != null && background != null && cardBack != null) {
             Vector3 pivot = transform.getPivot();

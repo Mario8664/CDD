@@ -1,5 +1,6 @@
 package com.saveandstudio.mario.cdd.Components;
 
+import android.util.Log;
 import com.saveandstudio.mario.cdd.GameBasic.MonoBehavior;
 import com.saveandstudio.mario.cdd.R;
 import com.saveandstudio.mario.cdd.Renderers.CardRenderer;
@@ -39,6 +40,10 @@ public class Card extends MonoBehavior {
         if (renderer != null) {
             renderer.setCardID(mapSuitID(suit), mapFigureID(suit, figure));
         }
+    }
+
+    @Override
+    public void Update(){
     }
 
     public void setCard(int suit, int figure) {
