@@ -11,7 +11,7 @@ public class CardRenderer extends Renderer {
     private Transform transform;
     private Bitmap suit, background, cardBack, figure;
     private int suitID, backgroundID, cardBackID, figureID;
-    private boolean side = true;
+    private boolean side = false;
     private int bitMapHeight, bitMapWidth;
     private boolean set;
 

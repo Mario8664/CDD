@@ -20,6 +20,7 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
     private Bitmap bitmapResource;
     private int bitMapHeight, bitMapWidth;
     private int bitmapId;
+    private int lastID;
     protected float zDepth;
     private boolean set = false;
 
@@ -49,15 +50,19 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
             if (bitmapResource == null) {
                 if (Global.surfaceContext != null) {
                     bitmapResource = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), bitmapId);
+                    lastID = bitmapId;
                     bitMapWidth = bitmapResource.getWidth();
                     bitMapHeight = bitmapResource.getHeight();
                 }
             } else {
                 canvas.drawBitmap(bitmapResource, transform.transformMatrix, null);
                 if (set) {
-                    bitmapResource = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), bitmapId);
-                    bitMapWidth = bitmapResource.getWidth();
-                    bitMapHeight = bitmapResource.getHeight();
+                    if(bitmapId != lastID){
+                        bitmapResource = BitmapFactory.decodeResource(Global.surfaceContext.getResources(), bitmapId);
+                        bitMapWidth = bitmapResource.getWidth();
+                        bitMapHeight = bitmapResource.getHeight();
+                        lastID = bitmapId;
+                    }
                     set = false;
                 }
 

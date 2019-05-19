@@ -1,5 +1,6 @@
 package com.saveandstudio.mario.cdd;
 
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+import com.saveandstudio.mario.cdd.Components.CardSystem;
 import com.saveandstudio.mario.cdd.GameBasic.Input;
 import com.saveandstudio.mario.cdd.GameBasic.Physics;
 import com.saveandstudio.mario.cdd.GameBasic.Renderer;
@@ -26,16 +28,6 @@ public class GameActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         hideNavigationBar();
-
-        Button newGame = findViewById(R.id.new_game);
-        newGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                exit();
-                Scene.prePareScene();
-            }
-        });
 
         Button mainMenu = findViewById(R.id.main_menu);
         mainMenu.setOnClickListener(new View.OnClickListener() {
@@ -63,11 +55,11 @@ public class GameActivity extends AppCompatActivity {
 
 
     public void exit() {
-        Scene.Clear();
-        Physics.Clear();
         if (Renderer.renderersList != null) {
             Renderer.renderersList.clear();
         }
+        Scene.Clear();
+        Physics.Clear();
     }
 
     private void hideNavigationBar() {

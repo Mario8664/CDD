@@ -18,11 +18,7 @@ public class Card extends GameObject {
                 (com.saveandstudio.mario.cdd.Components.Card) addComponent(new com.saveandstudio.mario.cdd.Components.Card());
         card.setCard(suit, figure);
         addComponent(new CardRenderer(R.mipmap.default_sprite, R.mipmap.default_sprite));
-        addComponent(new BoxCollider());
-        addComponent(new AutoCollider());
-        addComponent(new AutoPivot());
+        addComponent(new AutoCardPivot());
         addComponent(new TransformToTarget());
-        addComponent(new TouchEvents());
-
     }
 }

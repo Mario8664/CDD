@@ -65,6 +65,11 @@ public class Transform extends MonoBehavior{
     private void addChildren(Transform transform){
         children.add(transform);
     }
+    public Transform getChild(int index){
+        if(children.size() > 0)
+            return children.get(0);
+        return null;
+    }
     //Get transform
     public Transform getParent(){
         return parent;

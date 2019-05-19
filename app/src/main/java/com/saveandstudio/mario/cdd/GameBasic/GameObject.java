@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class GameObject {
 
     private ArrayList<MonoBehavior> components;
+    private ArrayList<MonoBehavior> newComponents;
     public boolean toBeDestroy;
 
     public GameObject(){
@@ -18,17 +19,15 @@ public class GameObject {
         if(Scene.gameObjectsList == null){
             Scene.gameObjectsList = new ArrayList<>();
         }
-        if(Scene.instantiateList == null){
-            Scene.instantiateList = new ArrayList<>();
-        }
-        Scene.instantiateList.add(this);
+        Scene.gameObjectsList.add(this);
         toBeDestroy = false;
-        components = new ArrayList<MonoBehavior>();
-        components.add(transform);
+        newComponents = new ArrayList<>();
+        components = new ArrayList<>();
+        newComponents.add(transform);
     }
 
     public MonoBehavior addComponent(MonoBehavior component){
-        components.add(component);
+        newComponents.add(component);
         component.gameObject = this;
         component.Awake();
         return component;
@@ -42,16 +41,26 @@ public class GameObject {
                 component = components.get(i);
             }
         }
+        if(component == null)
+        for (int i = 0; i < newComponents.size(); i++) {
+            if(newComponents.get(i).getClass().equals(classInfo)){
+                component = newComponents.get(i);
+            }
+        }
         return component;
     }
 
     public void Start(){
-        for (int i = 0; i < components.size(); i++) {
-            components.get(i).Start();
+        for (int i = 0; i < newComponents.size(); i++) {
+            MonoBehavior component = newComponents.get(i);
+            component.Start();
+            components.add(component);
         }
+        newComponents.clear();
     }
 
     public void Update(){
+        Start();
         for (int i = 0; i < components.size(); i++) {
             components.get(i).Update();
         }

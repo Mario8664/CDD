@@ -1,18 +1,19 @@
 package com.saveandstudio.mario.cdd.Components;
 
+import android.util.Log;
 import com.saveandstudio.mario.cdd.GameBasic.*;
 import com.saveandstudio.mario.cdd.Renderers.CardRenderer;
 
-public class AutoCollider extends MonoBehavior {
+public class AutoCardCollider extends MonoBehavior {
     private Transform transform;
     private BoxCollider collider;
-    private Renderer renderer;
+    private CardRenderer renderer;
 
     @Override
     public void Start() {
         transform = (Transform)getComponent(Transform.class);
         collider = (BoxCollider) getComponent(BoxCollider.class);
-        renderer = (Renderer) getComponent(Renderer.class);
+        renderer = (CardRenderer) getComponent(CardRenderer.class);
     }
 
     @Override

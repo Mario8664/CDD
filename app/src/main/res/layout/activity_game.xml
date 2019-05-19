@@ -21,13 +21,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/linearLayout">
         <Button
-                android:text="新游戏"
-                android:layout_width="0dp"
-                android:layout_height="match_parent" android:id="@+id/new_game" android:layout_weight="1"
-                android:textSize="24sp"
-                android:background="@drawable/main_game_button"/>
-        <Button
-                android:text="主菜单"
+                android:text="退回主菜单"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" android:id="@+id/main_menu" android:layout_weight="1"
                 android:textSize="24sp"

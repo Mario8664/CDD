@@ -1,5 +1,6 @@
 package com.saveandstudio.mario.cdd.Components;
 
+import android.util.Log;
 import com.saveandstudio.mario.cdd.GameBasic.MonoBehavior;
 import com.saveandstudio.mario.cdd.GameBasic.Transform;
 import com.saveandstudio.mario.cdd.GameBasic.Vector2;
@@ -34,15 +35,19 @@ public class TransformToTarget extends MonoBehavior {
     }
 
     public void beginMove(Vector3 position, float moveSpeed){
-        this.position = position;
+        this.position = position.clone();
         this.moveSpeed = moveSpeed;
         move = true;
+    }
+    public void beginScale(Vector3 targetScale, float scaleSpeed){
+        this.targetScale = targetScale.clone();
+        this.scaleSpeed = scaleSpeed;
+        scale = true;
     }
 
     private void move(){
         if(move){
             Vector3 originPosition = transform.getPosition();
-            position.z = originPosition.z;
             transform.setPosition(Vector3.lerp(originPosition, position, moveSpeed));
             if(originPosition.equal(position)){
                 move = false;
@@ -58,8 +63,23 @@ public class TransformToTarget extends MonoBehavior {
     }
     private void scale(){
         if(scale){
-
+            Vector3 originScale = transform.getScale();
+            transform.setScale(Vector3.lerp(originScale, targetScale, scaleSpeed));
+            if(originScale.equal(targetScale)){
+                scale = false;
+            }
         }
     }
 
+    public boolean isMove() {
+        return move;
+    }
+
+    public boolean isRotate() {
+        return rotate;
+    }
+
+    public boolean isScale() {
+        return scale;
+    }
 }

@@ -20,5 +20,8 @@ public class MonoBehavior {
         return gameObject.getComponent(classInfo);
     }
 
+    public MonoBehavior addComponent(MonoBehavior component){
+        return gameObject.addComponent(component);
+    }
 
 }

@@ -1,13 +1,19 @@
 package com.saveandstudio.mario.cdd.Components;
 
-import android.util.Log;
+import android.support.annotation.NonNull;
 import com.saveandstudio.mario.cdd.GameBasic.MonoBehavior;
+import com.saveandstudio.mario.cdd.GameBasic.Vector3;
 import com.saveandstudio.mario.cdd.R;
 import com.saveandstudio.mario.cdd.Renderers.CardRenderer;
 
-public class Card extends MonoBehavior {
-    int suit;
-    int figure;
+public class Card extends MonoBehavior implements Comparable<Card> {
+    private int suit;
+    private int figure;
+    private boolean side = false;
+    private HandCardManager manager;
+    public TransformToTarget transformToTarget;
+    public Vector3 position;
+    public boolean intractable = true;
     CardRenderer renderer;
     //suit
     final static int DIAMOND = 0;
@@ -40,10 +46,18 @@ public class Card extends MonoBehavior {
         if (renderer != null) {
             renderer.setCardID(mapSuitID(suit), mapFigureID(suit, figure));
         }
+        transformToTarget = (TransformToTarget)getComponent(TransformToTarget.class);
+    }
+
+    public void setSide(boolean side) {
+        this.side = side;
     }
 
     @Override
-    public void Update(){
+    public void Update() {
+        if (renderer != null) {
+            renderer.setSide(side);
+        }
     }
 
     public void setCard(int suit, int figure) {
@@ -65,9 +79,26 @@ public class Card extends MonoBehavior {
                 return R.mipmap.default_sprite;
         }
     }
-    
-    public int mapFigureID(int suit, int figure){
-        if(suit % 2 == 0){
+
+    @Override
+    public int compareTo(@NonNull Card card) {
+        if (figure > card.figure) {
+            return 1;
+        } else if (figure == card.figure) {
+            if (suit > card.suit) {
+                return 1;
+            } else if (suit < card.suit) {
+                return -1;
+            } else {
+                return 0;
+            }
+        } else {
+            return -1;
+        }
+    }
+
+    public int mapFigureID(int suit, int figure) {
+        if (suit % 2 == 0) {
             switch (figure) {
                 case THREE:
                     return R.mipmap.red_three;
@@ -98,8 +129,7 @@ public class Card extends MonoBehavior {
                 default:
                     return R.mipmap.default_sprite;
             }
-        }
-        else {
+        } else {
 
             switch (figure) {
                 case THREE:
@@ -132,6 +162,22 @@ public class Card extends MonoBehavior {
                     return R.mipmap.default_sprite;
             }
         }
-        
+
+    }
+
+    public void setManager(HandCardManager manager) {
+        this.manager = manager;
+    }
+
+    public HandCardManager getManager() {
+        return manager;
+    }
+
+    public int getFigure() {
+        return figure;
+    }
+
+    public int getSuit() {
+        return suit;
     }
 }

@@ -47,6 +47,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         Global.surfaceContext = context;
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
         paint = new Paint();
 
         paint.setColor(getResources().getColor(R.color.colorPrimary));
@@ -76,16 +77,21 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     //绘图
     private void render(Canvas canvas) {
-        //test
-        paint.setColor(getResources().getColor(R.color.colorPrimary));
-        canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
-        if (Renderer.renderersList != null) {
-            //sort
-            Collections.sort(Renderer.renderersList);
-            //render
-            for (int i = 0; i < Renderer.renderersList.size(); i++) {
-                Renderer.renderersList.get(i).Draw(canvas, paint);
+        try{
+            paint.setColor(getResources().getColor(R.color.colorPrimary));
+            canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
+            if (Renderer.renderersList != null) {
+                //sort
+                Collections.sort(Renderer.renderersList);
+                //render
+                for (int i = 0; i < Renderer.renderersList.size(); i++) {
+                    Renderer.renderersList.get(i).Draw(canvas, paint);
+                }
             }
+
+        }
+        catch (NullPointerException e){
+
         }
     }
 
@@ -119,8 +125,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         GameViewInfo.screenW = screenW;
         GameViewInfo.screenH = screenH;
         updateInput();
-        //Start
-        Scene.InstantiateStart();
         //Update
         if (Scene.gameObjectsList != null) {
             for (int i = 0; i < Scene.gameObjectsList.size(); i++) {
