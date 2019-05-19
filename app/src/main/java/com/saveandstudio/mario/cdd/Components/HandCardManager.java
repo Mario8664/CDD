@@ -72,6 +72,7 @@ public class HandCardManager extends MonoBehavior {
             card.position = Vector3.lerp(new Vector3(GameViewInfo.centerW, GameViewInfo.centerH, 0), transform.getPosition(), (float)0.2).add(
                     cardDesk.calculateOutPosition(i, outCards.size(), CardSystem.getInstance().getTurnAmount()));
             card.transformToTarget.beginMove(card.position, speed);
+            card.intractable = false;
         }
     }
 
@@ -81,7 +82,6 @@ public class HandCardManager extends MonoBehavior {
         for (int i = 0; i < outCards.size(); i++) {
             Card card = outCards.get(i);
             card.transformToTarget.beginScale(Vector3.zero, speed);
-            card.intractable = false;
         }
         outCards.clear();
 

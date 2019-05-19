@@ -66,7 +66,6 @@ public class CardSystem extends MonoBehavior {
                     for (int i = 0; i < cards.size(); i++) {
                         if(cards.get(i).getFigure() + cards.get(i).getSuit() == 0)
                             break;
-
                     }
                 }
                 else if (lastCards.size() == 4) {
@@ -75,7 +74,6 @@ public class CardSystem extends MonoBehavior {
                             cards.get(2).getFigure() == cards.get(3).getFigure())
                         return true;
                 }
-
             case 5:
                 return true;
             default:
