@@ -75,7 +75,6 @@ public class GameObject {
     public void Destroy(){
         Scene.gameObjectsList.remove(this);
         toBeDestroy = true;
-        Log.d("Game", "fff!");
     }
 
     private long startTime = 0;

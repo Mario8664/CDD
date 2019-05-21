@@ -1,7 +1,9 @@
 package com.saveandstudio.mario.cdd.Components;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import com.saveandstudio.mario.cdd.GameBasic.MonoBehavior;
+import com.saveandstudio.mario.cdd.GameBasic.Transform;
 import com.saveandstudio.mario.cdd.GameBasic.Vector3;
 import com.saveandstudio.mario.cdd.R;
 import com.saveandstudio.mario.cdd.Renderers.CardRenderer;
@@ -12,9 +14,15 @@ public class Card extends MonoBehavior implements Comparable<Card> {
     private boolean side = false;
     private HandCardManager manager;
     public TransformToTarget transformToTarget;
+    private Transform transform;
     public Vector3 position;
     public boolean intractable = true;
     CardRenderer renderer;
+    public float weight1 = 1;
+    public float weight2 = 1;
+    public float weight3 = 1;
+    public float weight4 = 1;
+    public float weight5 = 1;
     //suit
     final static int DIAMOND = 0;
     final static int CLUB = 1;
@@ -47,6 +55,7 @@ public class Card extends MonoBehavior implements Comparable<Card> {
             renderer.setCardID(mapSuitID(suit), mapFigureID(suit, figure));
         }
         transformToTarget = (TransformToTarget)getComponent(TransformToTarget.class);
+        transform = (Transform)getComponent(Transform.class);
     }
 
     public void setSide(boolean side) {

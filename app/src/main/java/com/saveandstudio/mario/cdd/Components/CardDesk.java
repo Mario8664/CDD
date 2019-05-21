@@ -26,7 +26,7 @@ public class CardDesk extends MonoBehavior {
         Vector3 position = new Vector3();
         float centerCard = (float)cardAmount / 2;
         position.x = (((float)cardIndex - centerCard) * gapDistance);
-        position.z = cardIndex * turn;
+        position.z = (cardIndex + 1) + turn * 13;
         return position;
     }
 }
