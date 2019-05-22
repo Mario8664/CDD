@@ -18,11 +18,7 @@ public class Card extends MonoBehavior implements Comparable<Card> {
     public Vector3 position;
     public boolean intractable = true;
     CardRenderer renderer;
-    public float weight1 = 1;
-    public float weight2 = 1;
-    public float weight3 = 1;
-    public float weight4 = 1;
-    public float weight5 = 1;
+    public float[] weights;
     //suit
     final static int DIAMOND = 0;
     final static int CLUB = 1;
@@ -46,6 +42,8 @@ public class Card extends MonoBehavior implements Comparable<Card> {
     public Card() {
         suit = DIAMOND;
         figure = THREE;
+        weights = new float[5];
+        resetWeight();
     }
 
     @Override
@@ -188,5 +186,11 @@ public class Card extends MonoBehavior implements Comparable<Card> {
 
     public int getSuit() {
         return suit;
+    }
+
+    public void resetWeight(){
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] = 1;
+        }
     }
 }

@@ -134,10 +134,6 @@ public class HandCardManager extends MonoBehavior {
         return id;
     }
 
-    public Card getCard(int index) {
-        return handCards.get(index);
-    }
-
     public ArrayList<Card> getCards(){
         return handCards;
     }

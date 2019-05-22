@@ -126,7 +126,7 @@ public class CardSystem extends MonoBehavior {
                 return false;
         }
     }
-    //要改
+
     public int judgeCardType(ArrayList<Card> cards) {
         int type = -1;
         int figure0 = cards.get(0).getFigure(), figure1 = cards.get(1).getFigure(), figure2 = cards.get(2).getFigure(),
