@@ -16,7 +16,8 @@ public class AiPlayer extends MonoBehavior {
     private long startThinkTime = 0;
     private boolean thinking = false;
     private final float decreaseRate = (float) 0.9;//递减率
-    private final float threshole = (float) 0.1;//出牌阈值
+    private final float decreaseGap = (float) 0.1;//递减值
+    private final float threshole = (float) 0.9;//出牌阈值
 
 
     @Override
@@ -52,6 +53,7 @@ public class AiPlayer extends MonoBehavior {
         ArrayList<ArrayList<Card>> cardPack_3 = new ArrayList<>();
         ArrayList<ArrayList<Card>> cardPack_4 = new ArrayList<>();
         ArrayList<ArrayList<Card>> cardPack_5 = new ArrayList<>();
+        ArrayList<Card> lastCards = CardSystem.getInstance().getLastCards();
         //每一张牌都有权重，先把他们的权重归1
         for (int i = 0; i < handCards.size(); i++) {
             Card card = handCards.get(i);
@@ -60,7 +62,14 @@ public class AiPlayer extends MonoBehavior {
         //先取一张牌的组，存入cardPack_1
         for (int i = 0; i < handCards.size(); i++) {
             ArrayList<Card> cards = new ArrayList<>();
-            cards.add(handCards.get(i));
+            Card card = handCards.get(i);
+            //比上一张牌小的直接出牌权重为0
+            if(lastCards.size() == 1){
+                if(card.compareTo(lastCards.get(0)) <= 0){
+                    card.weights[0] = 0;
+                }
+            }
+            cards.add(card);
             cardPack_1.add(cards);
         }
         //从头至倒数第一检阅cardPack_1，以检查对的存在（三连只能检测出两组）
@@ -75,6 +84,13 @@ public class AiPlayer extends MonoBehavior {
                 //两张牌的单张出牌权重减少
                 card_1.weights[0] *= decreaseRate;
                 card_2.weights[0] *= decreaseRate;
+                //比上一张牌小的直接出牌权重为0
+                if(lastCards.size() == 2){
+                    if(card_2.compareTo(lastCards.get(1)) <= 0){
+                        card_1.weights[1] = 0;
+                        card_2.weights[1] = 0;
+                    }
+                }
             }
         }
         //从头至倒数第一检阅cardPack_2, 以检查三连的存在
@@ -93,6 +109,14 @@ public class AiPlayer extends MonoBehavior {
                 card_1.weights[1] *= decreaseRate;
                 cardPack_2.get(i).get(1).weights[1] *= decreaseRate;
                 card_3.weights[1] *= decreaseRate;
+                //比上一张牌小的直接出牌权重为0
+                if(lastCards.size() == 3){
+                    if(card_3.compareTo(lastCards.get(2)) <= 0){
+                        card_1.weights[2] = 0;
+                        cardPack_2.get(i).get(1).weights[2] = 0;
+                        card_3.weights[2] = 0;
+                    }
+                }
 
                 //这里把两张牌补充至cardPack_2
                 ArrayList<Card> cards_added = new ArrayList<>();
@@ -102,6 +126,13 @@ public class AiPlayer extends MonoBehavior {
                 //两张牌的单张出牌率减少
                 card_1.weights[0] *= decreaseRate;
                 card_3.weights[0] *= decreaseRate;
+                //比上一张牌小的直接出牌权重为0
+                if(lastCards.size() == 2){
+                    if(card_3.compareTo(lastCards.get(1)) <= 0){
+                        card_1.weights[1] = 0;
+                        card_3.weights[1] = 0;
+                    }
+                }
             }
         }
         //从头至倒数第一检阅cardPack_3, 以检查四连的存在
@@ -125,6 +156,15 @@ public class AiPlayer extends MonoBehavior {
                 card_2.weights[2] *= decreaseRate;
                 card_3.weights[2] *= decreaseRate;
                 card_4.weights[2] *= decreaseRate;
+                //比上一张牌小的直接出牌权重为0
+                if(lastCards.size() == 4){
+                    if(card_4.compareTo(lastCards.get(3)) <= 0){
+                        card_1.weights[3] = 0;
+                        card_2.weights[3] = 0;
+                        card_3.weights[3] = 0;
+                        card_4.weights[3] = 0;
+                    }
+                }
 
                 //这里把三张牌补充至cardPack_3
                 ArrayList<Card> cards_added_3_1 = new ArrayList<>();
@@ -143,6 +183,16 @@ public class AiPlayer extends MonoBehavior {
                 card_1.weights[2] *= decreaseRate;
                 card_3.weights[2] *= decreaseRate;
                 card_4.weights[2] *= decreaseRate;
+                //比上一张牌小的直接出牌权重为0
+                if(lastCards.size() == 3){
+                    if(card_4.compareTo(lastCards.get(2)) <= 0){
+                        card_1.weights[2] = 0;
+                        card_2.weights[2] = 0;
+                        card_3.weights[2] = 0;
+                        card_4.weights[2] = 0;
+                    }
+                }
+
                 cardPack_3.add(cards_added_3_1);
                 cardPack_3.add(cards_added_3_2);
 
@@ -153,6 +203,13 @@ public class AiPlayer extends MonoBehavior {
                 cards_added_2.add(card_4);
                 card_1.weights[1] *= decreaseRate;
                 card_4.weights[1] *= decreaseRate;
+                //比上一张牌小的直接出牌权重为0
+                if(lastCards.size() == 2){
+                    if(card_4.compareTo(lastCards.get(1)) <= 0){
+                        card_1.weights[1] = 0;
+                        card_4.weights[1] = 0;
+                    }
+                }
                 cardPack_2.add(cards_added_2);
             }
         }
@@ -203,8 +260,110 @@ public class AiPlayer extends MonoBehavior {
         }
 
         //同花
-        
-
+        //先把牌组复制一份，按照花色排序
+        ArrayList<Card> handCardsSuit = new ArrayList<>();
+        Collections.sort(handCardsSuit, new Comparator<Card>() {
+            @Override
+            public int compare(Card card, Card t1) {
+                if(card.getSuit() > t1.getSuit())
+                    return 1;
+                if(card.getSuit() == t1.getSuit())
+                    return 0;
+                return -1;
+            }
+        });
+        ArrayList<ArrayList<Card>> cardPack_suit = new ArrayList<>();
+        for (int i = 0; i < handCardsSuit.size();) {
+            ArrayList<Card> cards = new ArrayList<>();
+            cards.add(handCardsSuit.get(i));
+            i ++;
+            while (i < handCardsSuit.size()){
+                if(handCardsSuit.get(i).getSuit() == handCardsSuit.get(i + 1).getSuit()){
+                    cards.add(handCardsSuit.get(i + 1));
+                    i ++;
+                }
+                else
+                    break;
+            }
+            //把能组成同花的其余权重降低，但是同花只储存到同花数组
+            if(cards.size() >= 5){
+                for (int i1 = 0; i1 < cards.size(); i1++) {
+                    for (int j = 0; j < 5; j++) {
+                        cards.get(j).weights[j] *= decreaseRate;
+                    }
+                }
+                cardPack_suit.add(cards);
+            }
+        }
+        //葫芦
+        //葫芦取cardPack_3和cardPack_2中不一样点数的进行排列组合, 由于葫芦是看3张牌的最大张大小, 因此2张牌的部分越小越有利
+        //所以3张牌的3张出牌权重直接降低，2张牌的5张出牌权重按照点数从小到大越逐渐降低。
+        for (int i = 0; i < cardPack_3.size(); i++) {
+            ArrayList<Card> cards_3 = new ArrayList<>();
+            cards_3.addAll(cardPack_3.get(i));
+            for (int i1 = 0; i1 < cardPack_2.size(); i1++) {
+                if(cardPack_2.get(i1).get(0).getFigure() != cards_3.get(0).getFigure()){
+                    ArrayList<Card> cards_2 = cardPack_2.get(i1);
+                    for (int i2 = 0; i2 < cards_2.size(); i2++) {
+                        //权重加上对应逆序号乘递减值, 比如倒数第一张牌的权重要加上一个递减值
+                        cards_2.get(i2).weights[4] += decreaseGap * (cardPack_2.size() - i1);
+                    }
+                    ArrayList<Card> cards = new ArrayList<>();
+                    cards.addAll(cards_2);
+                    cards.addAll(cards_3);
+                    for (int i2 = 0; i2 < cards.size(); i2++) {
+                        cards.get(i2).weights[1] *= decreaseRate;
+                        cards.get(i2).weights[2] *= decreaseRate;
+                    }
+                    cardPack_5.add(cards);
+                }
+            }
+        }
+        //金刚
+        //金刚最好判, 因为只要四带一，任意一张都可以拼
+        //但是, 其中的5张出牌权重要根据牌从大到小递增, 并且要根据牌的1张出牌权重从大到小递减
+        for (int i = 0; i < cardPack_4.size(); i++) {
+            for (int i1 = 0; i1 < handCards.size(); i1++) {
+                if(handCards.get(i1).getFigure() != cardPack_4.get(i).get(0).getFigure()){
+                    Card card = handCards.get(i1);
+                    ArrayList<Card> cards_4 = cardPack_4.get(i);
+                    card.weights[4] += decreaseGap * (handCards.size() - i1);
+                    card.weights[4] += decreaseGap * card.weights[0];
+                    for (int i2 = 0; i2 < cards_4.size(); i2++) {
+                        cards_4.get(i2).weights[3] *= decreaseGap;
+                    }
+                    ArrayList<Card> cards = new ArrayList<>();
+                    cards.add(card);
+                    cards.addAll(cards_4);
+                    cardPack_5.add(cards);
+                }
+            }
+        }
+        if(CardSystem.getInstance().getTurnAmount() == 0 || CardSystem.getInstance().getLastPlayerID() == manager.getId()){
+            manager.addChosenCard(manager.getCards().get(0));
+            return true;
+        }
+        else {
+            int i = lastCards.size();
+            switch (i){
+                case 1:
+                    if(chooseOneCard(cardPack_1) != null){
+                        manager.addChosenCard(chooseOneCard(cardPack_1).get(0));
+                        return true;
+                    }
+                case 2:
+                    ArrayList<Card> cards = chooseTwoCards(cardPack_2);
+                    if(cards != null){
+                        manager.addChosenCard(cards.get(0));
+                        manager.addChosenCard(cards.get(1));
+                        return true;
+                    }
+                case 3:
+                case 4:
+                case 5:
+                default:
+            }
+        }
         return false;
     }
 
@@ -252,6 +411,51 @@ public class AiPlayer extends MonoBehavior {
                 }
             }
         }
+    }
+    private ArrayList<Card> chooseOneCard(ArrayList<ArrayList<Card>> cardPack_1){
+        if(cardPack_1.size() > 0){
+            Collections.sort(cardPack_1, new Comparator<ArrayList<Card>>() {
+                @Override
+                public int compare(ArrayList<Card> cards, ArrayList<Card> t1) {
+                    if(cards.get(0).weights[0] > t1.get(0).weights[0]){
+                        return -1;
+                    }
+                    if(cards.get(0).weights[0] == t1.get(0).weights[0]){
+                        return 0;
+                    }
+                    return 1;
+                }
+            });
+            if(cardPack_1.get(0).get(0).weights[0] > threshole)
+                return cardPack_1.get(0);
+        }
+        return null;
+    }
+    private ArrayList<Card> chooseTwoCards(ArrayList<ArrayList<Card>> cardPack_2){
+        if(cardPack_2.size() > 0){
+            Collections.sort(cardPack_2, new Comparator<ArrayList<Card>>() {
+                @Override
+                public int compare(ArrayList<Card> cards, ArrayList<Card> t1) {
+                    float a = cards.get(0).weights[1] + cards.get(1).weights[1];
+                    float b = t1.get(0).weights[1] + t1.get(1).weights[1];
+                    if(a > b){
+                        return -1;
+                    }
+                    if(a == b){
+                        return 0;
+                    }
+                    return 1;
+                }
+            });
+            float weight = 0;
+            for (int i = 0; i < cardPack_2.get(0).size(); i++) {
+                weight += cardPack_2.get(0).get(i).weights[1];
+            }
+            weight /= 2;
+            if(weight > threshole)
+                return cardPack_2.get(0);
+        }
+        return null;
     }
 }
 
