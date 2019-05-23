@@ -43,8 +43,9 @@ public class HandCardManager extends MonoBehavior {
                 card.addComponent(new BoxCollider());
                 card.addComponent(new AutoCardCollider());
                 card.addComponent(new TouchCardEvents());
-                card.setSide(true);
             }
+            //明牌Debug
+            card.setSide(true);
             handCards.add(card);
             if (card.getSuit() + card.getFigure() == 0) {
                 CardSystem.getInstance().setFirstTurn(id);
@@ -124,7 +125,7 @@ public class HandCardManager extends MonoBehavior {
     @Override
     public void Update() {
         enableShowCard = CardSystem.getInstance().judgeCards(chosenCards) && turn;
-        if (CardSystem.getInstance().getTurnAmount() == 0)
+        if (CardSystem.getInstance().getTurnAmount() == 0 || CardSystem.getInstance().getLastPlayerID() == id)
             enablePass = false;
         else
             enablePass = turn;

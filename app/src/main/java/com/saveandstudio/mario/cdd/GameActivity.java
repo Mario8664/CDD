@@ -60,6 +60,7 @@ public class GameActivity extends AppCompatActivity {
         }
         Scene.Clear();
         Physics.Clear();
+        CardSystem.getInstance().remove();
     }
 
     private void hideNavigationBar() {

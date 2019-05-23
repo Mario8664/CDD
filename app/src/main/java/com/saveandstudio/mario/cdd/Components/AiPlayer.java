@@ -1,5 +1,7 @@
 package com.saveandstudio.mario.cdd.Components;
 
+import android.os.Debug;
+import android.util.Log;
 import com.saveandstudio.mario.cdd.GameBasic.MonoBehavior;
 
 import java.util.ArrayList;
@@ -35,13 +37,41 @@ public class AiPlayer extends MonoBehavior {
                 startThinkTime = System.currentTimeMillis();
                 thinking = true;
             } else if (System.currentTimeMillis() - startThinkTime >= thinkTime) {
-                manager.passHandler();
+                if(CardSystem.getInstance().getTurnAmount() == 0 || CardSystem.getInstance().getLastPlayerID() == manager.getId()){
+                    manager.addChosenCard(manager.getCards().get(0));
+                    manager.showCardHandler();
+                }
+                else if(chooseCards())
+                    manager.showCardHandler();
+                else
+                    manager.passHandler();
                 thinking = false;
             }
         }
     }
 
     private boolean chooseCards() {
+        //清空所有cardPack
+        for (int i = 0; i < cardPack_1.size(); i++) {
+            cardPack_1.get(i).clear();
+        }
+        cardPack_1.clear();
+        for (int i = 0; i < cardPack_2.size(); i++) {
+            cardPack_2.get(i).clear();
+        }
+        cardPack_2.clear();
+        for (int i = 0; i < cardPack_3.size(); i++) {
+            cardPack_3.get(i).clear();
+        }
+        cardPack_3.clear();
+        for (int i = 0; i < cardPack_4.size(); i++) {
+            cardPack_4.get(i).clear();
+        }
+        cardPack_4.clear();
+        for (int i = 0; i < cardPack_5.size(); i++) {
+            cardPack_5.get(i).clear();
+        }
+        cardPack_5.clear();
         //每一张牌都有权重，先把他们的权重归1
         for (int i = 0; i < handCards.size(); i++) {
             Card card = handCards.get(i);
@@ -55,8 +85,8 @@ public class AiPlayer extends MonoBehavior {
         }
         //从头至倒数第一检阅cardPack_1，以检查对的存在（三连只能检测出两组）
         for (int i = 0; i < cardPack_1.size() - 1; i++) {
-            Card card_1 = handCards.get(i);
-            Card card_2 = handCards.get(i + 1);
+            Card card_1 = cardPack_1.get(i).get(0);
+            Card card_2 = cardPack_1.get(i + 1).get(0);
             if (card_1.getFigure() == card_2.getFigure()) {
                 ArrayList<Card> cards = new ArrayList<>();
                 cards.add(card_1);
@@ -144,6 +174,7 @@ public class AiPlayer extends MonoBehavior {
                 cardPack_2.add(cards_added_2);
             }
         }
+
         //这里按次序检查顺子、同花顺、同花、葫芦和金刚的存在
 
         //顺子
@@ -168,43 +199,62 @@ public class AiPlayer extends MonoBehavior {
             for (int j = i; j < i + 5; j++) {
                 cardsSample.add(cardBucket.get(j).get(0));
             }
-            sequentialCardMatch(cardBucket, cardsSample, i);
+            sequentialCardMatch(cardBucket, cardsSample, i, i + 1, i + 2, i + 3, i + 4);
         }
         //这里特判A2345和23456
+        if(cardBucket.size() >= 5){
+            ArrayList<Card> cardsSample_A2345 = new ArrayList<>();
+            cardsSample_A2345.add(cardBucket.get(0).get(0));
+            cardsSample_A2345.add(cardBucket.get(1).get(0));
+            cardsSample_A2345.add(cardBucket.get(2).get(0));
+            cardsSample_A2345.add(cardBucket.get(cardBucket.size() - 2).get(0));
+            cardsSample_A2345.add(cardBucket.get(cardBucket.size() - 1).get(0));
+            sequentialCardMatch(cardBucket, cardsSample_A2345, 0, 1, 2, cardBucket.size() - 2, cardBucket.size() - 1);
 
+            ArrayList<Card> cardsSample_23456 = new ArrayList<>();
+            cardsSample_23456.add(cardBucket.get(0).get(0));
+            cardsSample_23456.add(cardBucket.get(1).get(0));
+            cardsSample_23456.add(cardBucket.get(2).get(0));
+            cardsSample_23456.add(cardBucket.get(3).get(0));
+            cardsSample_23456.add(cardBucket.get(cardBucket.size() - 1).get(0));
+            sequentialCardMatch(cardBucket, cardsSample_23456, 0, 1, 2, 3, cardBucket.size() - 1);
+        }
+
+        //同花
+
+        //Debug
+        for (int i = 0; i < cardPack_5.size(); i++) {
+            Log.d("CardPack_5", manager.getId() + ": " + CardSystem.getInstance().judgeCardType(cardPack_5.get(i)));
+        }
 
         return false;
     }
 
-    private void sequentialCardMatch(ArrayList<ArrayList<Card>> cardBucket, ArrayList<Card> cardsSample, int i){
-        if (CardSystem.getInstance().judgeCardType(cardsSample) == 0) {//判定为顺子
-            for (int i1 = 0; i1 < cardBucket.get(i).size(); i1++) {
+    private void sequentialCardMatch(ArrayList<ArrayList<Card>> cardBucket, ArrayList<Card> cardsSample, int... i){
+        int cardType = CardSystem.getInstance().judgeCardType(cardsSample);
+        if (cardType == 0 || cardType == 4) {//判定为顺子
+            for (int i1 = 0; i1 < cardBucket.get(i[0]).size(); i1++) {
                 //第一层循环, 放入第一张
-                ArrayList<Card> cards_1 = new ArrayList<>();
-                cards_1.add(cardBucket.get(i).get(i1));
-                for (int i2 = 0; i2 < cardBucket.get(i + 1).size(); i2++) {
+                Card card_1 = cardBucket.get(i[0]).get(i1);
+                for (int i2 = 0; i2 < cardBucket.get(i[1]).size(); i2++) {
                     //第二层循环, 放入第二张
-                    ArrayList<Card> cards_2 = new ArrayList<>();
-                    cards_2.add(cardBucket.get(i + 1).get(i2));
-                    for (int i3 = 0; i3 < cardBucket.get(i + 2).size(); i3++) {
+                    Card card_2 = cardBucket.get(i[1]).get(i2);
+                    for (int i3 = 0; i3 < cardBucket.get(i[2]).size(); i3++) {
                         //第三层循环, 放入第三张
-                        ArrayList<Card> cards_3 = new ArrayList<>();
-                        cards_3.add(cardBucket.get(i + 2).get(i3));
-                        for (int i4 = 0; i4 < cardBucket.get(i + 3).size(); i4++) {
+                        Card card_3 = cardBucket.get(i[2]).get(i3);
+                        for (int i4 = 0; i4 < cardBucket.get(i[3]).size(); i4++) {
                             //第四层循环, 放入第四张
-                            ArrayList<Card> cards_4 = new ArrayList<>();
-                            cards_4.add(cardBucket.get(i + 3).get(i4));
-                            for (int i5 = 0; i5 < cardBucket.get(i + 4).size(); i5++) {
+                            Card card_4 = cardBucket.get(i[3]).get(i4);
+                            for (int i5 = 0; i5 < cardBucket.get(i[4]).size(); i5++) {
                                 //第五层循环, 放入第五张
-                                ArrayList<Card> cards_5 = new ArrayList<>();
-                                cards_5.add(cardBucket.get(i + 3).get(i5));
+                                Card card_5 = cardBucket.get(i[4]).get(i5);
                                 //把以上数组合并
                                 ArrayList<Card> cards = new ArrayList<>();
-                                cards.addAll(cards_1);
-                                cards.addAll(cards_2);
-                                cards.addAll(cards_3);
-                                cards.addAll(cards_4);
-                                cards.addAll(cards_5);
+                                cards.add(card_1);
+                                cards.add(card_2);
+                                cards.add(card_3);
+                                cards.add(card_4);
+                                cards.add(card_5);
                                 //降低它们的1到4权重
                                 for (int k = 0; k < cards.size(); k++) {
                                     for (int k1 = 0; k1 < cards.get(k).weights.length - 1; k1++) {

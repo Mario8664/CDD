@@ -6,7 +6,7 @@ import com.saveandstudio.mario.cdd.GameBasic.Vector3;
 public class CardDesk extends MonoBehavior {
 
     private int direction;//0 is horizontal, 1 is vertical;
-    private float gapDistance = 40;
+    private float gapDistance = 45;
 
     public CardDesk(){
         this(0);

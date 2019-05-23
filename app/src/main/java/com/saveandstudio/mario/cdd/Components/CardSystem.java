@@ -116,6 +116,8 @@ public class CardSystem extends MonoBehavior {
                 if(turnAmount == 0){
                     return (cards.get(0).getFigure() + cards.get(0).getSuit() == 0);
                 }
+                if(turn == lastPlayerID)
+                    return true;
                 if(thisCardType > lastCardType){
                     return true;
                 }
@@ -224,6 +226,10 @@ public class CardSystem extends MonoBehavior {
             }
         }
         Collections.shuffle(cards);
+    }
+
+    public void remove(){
+        cardSystemInstance = null;
     }
 
     public void setFirstTurn(int id) {
