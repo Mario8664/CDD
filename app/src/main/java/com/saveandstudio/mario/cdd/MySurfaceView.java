@@ -172,6 +172,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }
         }
         flag = false;
+        Global.surfaceContext = null;
     }
 
     class GameThread extends Thread {
