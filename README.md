@@ -10,6 +10,9 @@
 * 2、游戏的AI基本上是靠着直觉写的计算方法，写完后就想了解一下神经网络，结果发现原来神经网络基本上也是靠权重和阈值进行划分的。只不过那种AI可以训练，我这种就是写死的权重计算和阈值。如果以后有机会，可以增加真正的人工智能算法。
 * 3、游戏中用到的安卓开发知识很少，因为前期写定了SurfaceView的基本框架后，后面只要自己写游戏引擎的框架就可以了，后期基本没有碰安卓部分的东西。
 
-> 来几张截图
+> ###来几张截图
+
+![开始界面]https://github.com/Mario8664/CDD/blob/master/screenshot/Screenshot_20190526-185429.jpg
+![游戏界面]https://github.com/Mario8664/CDD/blob/master/screenshot/Screenshot_20190526-185438.jpg
 
 
