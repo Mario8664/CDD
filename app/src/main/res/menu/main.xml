@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/settings"
-            android:title="设置"/>
+            android:title="开发者"/>
     <item
             android:id="@+id/about"
-            android:title="关于"/>
+            android:title="工作室"/>
 </menu>

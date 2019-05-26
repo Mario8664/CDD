@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class Renderer extends MonoBehavior implements Comparable<Renderer> {
 
     static public ArrayList<Renderer> renderersList = new ArrayList<>();
+    public static boolean clear = false;
 
     protected Transform transform;
     private Bitmap bitmapResource;
@@ -30,7 +31,10 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
 
     public Renderer(int id) {
         bitmapId = id;
-        renderersList.add(this);
+        clear = false;
+        synchronized (renderersList){
+            renderersList.add(this);
+        }
     }
 
     public void setBitmapResource(int id) {
@@ -86,7 +90,10 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
     }
 
     public void Destroy() {
-        renderersList.remove(this);
+        synchronized (renderersList){
+            renderersList.remove(this);
+        }
+
     }
 
     public int getBitMapWidth() {

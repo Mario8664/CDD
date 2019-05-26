@@ -14,18 +14,18 @@ public class HandCardManager extends MonoBehavior {
     private boolean updatePosition = false;
     private ArrayList<Card> chosenCards;
     private int id;
+    private TransformToTarget passT;
+    private Transform pass;
 
     public boolean enableShowCard = false;
     public boolean enablePass = false;
     public boolean turn;
 
-    public HandCardManager() {
-        this(false, 100);
-    }
-
-    public HandCardManager(boolean isPlayer, int id) {
+    public HandCardManager(boolean isPlayer, int id, GameObject pass) {
         this.isPlayer = isPlayer;
         this.id = id;
+        this.pass = (Transform) pass.getComponent(Transform.class);
+        passT = (TransformToTarget) pass.getComponent(TransformToTarget.class);
     }
 
     @Override
@@ -43,17 +43,17 @@ public class HandCardManager extends MonoBehavior {
                 card.addComponent(new BoxCollider());
                 card.addComponent(new AutoCardCollider());
                 card.addComponent(new TouchCardEvents());
+                card.setSide(true);
             }
-            //明牌Debug
-            card.setSide(true);
+
             handCards.add(card);
+
+            Collections.sort(handCards);
             if (card.getSuit() + card.getFigure() == 0) {
                 CardSystem.getInstance().setFirstTurn(id);
             }
         }
-        Collections.sort(handCards);
         updatePositions();
-
     }
 
     public void updatePositions() {
@@ -75,6 +75,7 @@ public class HandCardManager extends MonoBehavior {
             card.transformToTarget.beginMove(card.position, speed);
             card.intractable = false;
         }
+        passT.beginScale(Vector3.zero, speed);
     }
 
     public void clearOutCards() {
@@ -84,6 +85,8 @@ public class HandCardManager extends MonoBehavior {
             Card card = outCards.get(i);
             card.transformToTarget.beginScale(Vector3.zero, speed);
         }
+        pass.setScale(Vector3.zero);
+        passT.beginScale(Vector3.one, speed);
         outCards.clear();
 
     }

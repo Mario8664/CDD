@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 if (setting_hint != null) {
                     setting_hint.cancel();
                 }
-                setting_hint = Toast.makeText(MainActivity.this, "这是设置按钮", Toast.LENGTH_SHORT);
+                setting_hint = Toast.makeText(MainActivity.this, "|SXT|WWJ|PXX|LYJ|", Toast.LENGTH_SHORT);
                 setting_hint.show();
                 break;
             case R.id.about:

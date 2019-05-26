@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+import com.saveandstudio.mario.cdd.Components.Card;
 import com.saveandstudio.mario.cdd.Components.CardSystem;
+import com.saveandstudio.mario.cdd.GameBasic.Global;
 import com.saveandstudio.mario.cdd.GameBasic.Input;
 import com.saveandstudio.mario.cdd.GameBasic.Physics;
 import com.saveandstudio.mario.cdd.GameBasic.Renderer;
@@ -20,6 +22,9 @@ import java.util.Collections;
 public class GameActivity extends AppCompatActivity {
 
     private Toast newGame_hint;
+    private boolean exit = false;
+    private static long lastClickTime = System.currentTimeMillis();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +60,17 @@ public class GameActivity extends AppCompatActivity {
 
 
     public void exit() {
-        if (Renderer.renderersList != null) {
-            Renderer.renderersList.clear();
+        synchronized (Renderer.renderersList) {
+            Renderer.clear = true;
+            if (Renderer.renderersList != null) {
+                Renderer.renderersList.clear();
+            }
         }
-        Scene.Clear();
+        Scene.getInstance().clear = true;
         Physics.Clear();
-        CardSystem.getInstance().remove();
+        synchronized (CardSystem.getInstance()){
+            CardSystem.getInstance().remove();
+        }
     }
 
     private void hideNavigationBar() {

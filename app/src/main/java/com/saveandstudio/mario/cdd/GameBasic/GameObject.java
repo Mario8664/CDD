@@ -16,10 +16,10 @@ public class GameObject {
     }
 
     public GameObject(Transform transform){
-        if(Scene.gameObjectsList == null){
-            Scene.gameObjectsList = new ArrayList<>();
+        if(Scene.getInstance().gameObjectsList == null){
+            Scene.getInstance().gameObjectsList = new ArrayList<>();
         }
-        Scene.gameObjectsList.add(this);
+        Scene.getInstance().gameObjectsList.add(this);
         toBeDestroy = false;
         newComponents = new ArrayList<>();
         components = new ArrayList<>();
@@ -73,7 +73,7 @@ public class GameObject {
     }
 
     public void Destroy(){
-        Scene.gameObjectsList.remove(this);
+        Scene.getInstance().gameObjectsList.remove(this);
         toBeDestroy = true;
     }
 

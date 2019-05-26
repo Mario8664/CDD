@@ -2,6 +2,8 @@ package com.saveandstudio.mario.cdd.Components;
 
 import android.util.Log;
 import com.saveandstudio.mario.cdd.GameBasic.*;
+import com.saveandstudio.mario.cdd.R;
+import com.saveandstudio.mario.cdd.Scenes.Scene;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +22,8 @@ public class CardSystem extends MonoBehavior {
     private Card lastMaxCard;
     private int thisCardType = 0;
     private Card thisMaxCard;
+    private int cardNum = 52;
+    private int[] cardNums;
     /*
      * 0、杂顺
      * 1、同花
@@ -27,6 +31,7 @@ public class CardSystem extends MonoBehavior {
      * 3、金刚
      * 4、同花顺
      * */
+    public boolean someOneWin = false;
 
     @Override
     public void Awake() {
@@ -46,10 +51,6 @@ public class CardSystem extends MonoBehavior {
 
     @Override
     public void Update() {
-        for (int i = 0; i < players.size(); i++) {
-            players.get(i).turn = false;
-        }
-        players.get(turn).turn = true;
     }
 
     public com.saveandstudio.mario.cdd.Components.Card deliverCard() {
@@ -69,7 +70,7 @@ public class CardSystem extends MonoBehavior {
             case 1:
                 if (turnAmount == 0)
                     return (cards.get(0).getSuit() + cards.get(0).getFigure() == 0);
-                else if(turn == lastPlayerID)
+                else if (turn == lastPlayerID)
                     return true;
                 else
                     return (cards.get(0).compareTo(lastCards.get(0)) > 0);
@@ -78,8 +79,7 @@ public class CardSystem extends MonoBehavior {
                     return false;
                 if (turnAmount == 0) {
                     return (cards.get(0).getSuit() + cards.get(0).getFigure() == 0);
-                }
-                else if(turn == lastPlayerID)
+                } else if (turn == lastPlayerID)
                     return true;
                 else {
                     return (cards.get(1).compareTo(lastCards.get(1)) > 0);
@@ -89,8 +89,7 @@ public class CardSystem extends MonoBehavior {
                     return false;
                 if (turnAmount == 0) {
                     return (cards.get(0).getSuit() + cards.get(0).getFigure() == 0);
-                }
-                else if(turn == lastPlayerID)
+                } else if (turn == lastPlayerID)
                     return true;
                 else {
                     return (cards.get(2).compareTo(lastCards.get(2)) > 0);
@@ -102,26 +101,24 @@ public class CardSystem extends MonoBehavior {
                     return false;
                 if (turnAmount == 0) {
                     return (cards.get(0).getSuit() + cards.get(0).getFigure() == 0);
-                }
-                else if(turn == lastPlayerID)
+                } else if (turn == lastPlayerID)
                     return true;
                 else {
                     return (cards.get(3).compareTo(lastCards.get(3)) > 0);
                 }
             case 5:
                 thisCardType = judgeCardType(cards);
-                if(thisCardType == -1){
+                if (thisCardType == -1) {
                     return false;
                 }
-                if(turnAmount == 0){
+                if (turnAmount == 0) {
                     return (cards.get(0).getFigure() + cards.get(0).getSuit() == 0);
                 }
-                if(turn == lastPlayerID)
+                if (turn == lastPlayerID)
                     return true;
-                if(thisCardType > lastCardType){
+                if (thisCardType > lastCardType) {
                     return true;
-                }
-                else if(thisCardType == lastCardType){
+                } else if (thisCardType == lastCardType) {
                     return (thisMaxCard.compareTo(lastMaxCard) > 0);
                 }
             default:
@@ -135,65 +132,96 @@ public class CardSystem extends MonoBehavior {
                 figure3 = cards.get(3).getFigure(), figure4 = cards.get(4).getFigure();
         int suit0 = cards.get(0).getSuit(), suit1 = cards.get(1).getSuit(), suit2 = cards.get(2).getSuit(),
                 suit3 = cards.get(3).getSuit(), suit4 = cards.get(4).getSuit();
-        if (figure0 + 1 == figure1 && figure1 + 1 == figure2 && figure2 + 1 == figure3 && figure3 + 1 == figure4 && figure4 != 12){
+        if (figure0 + 1 == figure1 && figure1 + 1 == figure2 && figure2 + 1 == figure3 && figure3 + 1 == figure4 && figure4 != 12) {
             thisMaxCard = cards.get(4);
             type = 0;//杂顺
-        }
-        else if(figure0 == 0 && figure1 == 1 && figure2 == 2 && figure4 == 12){
-            if(figure3 == 11){
+        } else if (figure0 == 0 && figure1 == 1 && figure2 == 2 && figure4 == 12) {
+            if (figure3 == 11) {
                 //345A2
                 thisMaxCard = cards.get(4);
                 type = 0;
-            }
-            else if(figure3 == 3){
+            } else if (figure3 == 3) {
                 //34562
                 thisMaxCard = cards.get(4);
                 type = 0;
             }
         }
-        if(suit0 == suit1 && suit1 == suit2 && suit2 == suit3 && suit3 == suit4){
-            if(type == 0)
-            {
+        if (suit0 == suit1 && suit1 == suit2 && suit2 == suit3 && suit3 == suit4) {
+            if (type == 0) {
                 return 4;//同花顺
-            }
-            else{
+            } else {
                 return 1;//同花
             }
-        }
-        else if(figure0 == figure3){
-                thisMaxCard = cards.get(3);
-                return 3;//金刚4带1
-            }
-        else if(figure1 == figure4) {
+        } else if (figure0 == figure3) {
+            thisMaxCard = cards.get(3);
+            return 3;//金刚4带1
+        } else if (figure1 == figure4) {
             thisMaxCard = cards.get(4);
             return 3;//金刚1带4
-        }
-        else if(figure0 == figure2 && figure3 == figure4) {
+        } else if (figure0 == figure2 && figure3 == figure4) {
             thisMaxCard = cards.get(2);
             return 2;//葫芦3带2
-        }
-        else if(figure2 == figure4 && figure0 == figure1) {
+        } else if (figure2 == figure4 && figure0 == figure1) {
             thisMaxCard = cards.get(4);
             return 2;//葫芦2带3
         }
-            return type;
+        return type;
     }
 
     public void showCards(ArrayList<com.saveandstudio.mario.cdd.Components.Card> cards) {
-        if(cards.size() == 5){
+        if (cards.size() == 5) {
             lastCardType = thisCardType;
             lastMaxCard = thisMaxCard;
         }
         lastCards.clear();
         lastCards.addAll(cards);
         lastPlayerID = turn;
+        cardNums[turn] -= cards.size();
+        if (cardNums[turn] == 0) {
+            someOneWin = true;
+        }
         turn = (turn + 1) % 4;
         turnAmount++;
+        cardNum -= cards.size();
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).turn = false;
+        }
+        players.get(turn).turn = true;
+
+    }
+
+    public void showWinState() {
+        synchronized (Renderer.renderersList) {
+            Renderer.clear = true;
+            if (Renderer.renderersList != null) {
+                Renderer.renderersList.clear();
+            }
+        }
+        Scene.getInstance().clearGameObjects();
+        Physics.Clear();
+        cards.clear();
+        lastCards.clear();
+        GameObject win = new GameObject(new Transform(new Vector3(GameViewInfo.centerW, GameViewInfo.centerH, 120), 0,
+                new Vector3(0, 1, 0), Vector3.zero));
+        win.addComponent(new AutoPivot());
+        int state;
+        if ((turn + 3) % 4 == 0) {
+            state = R.mipmap.win;
+        } else {
+            state = R.mipmap.lose;
+
+        }
+        win.addComponent(new Renderer(state));
+        ((TransformToTarget) win.addComponent(new TransformToTarget())).beginScale(Vector3.one, 20 * GameViewInfo.deltaTime);
     }
 
     public void pass() {
         turn = (turn + 1) % 4;
         turnAmount++;
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).turn = false;
+        }
+        players.get(turn).turn = true;
     }
 
     public void addPlayer(HandCardManager player) {
@@ -211,10 +239,16 @@ public class CardSystem extends MonoBehavior {
     }
 
     public void newGame() {
+        someOneWin = false;
         turnAmount = 0;
         players.clear();
         cards.clear();
         lastCards.clear();
+        cardNum = 52;
+        cardNums = new int[4];
+        for (int i = 0; i < 4; i++) {
+            cardNums[i] = 13;
+        }
         //Prepare cards
         cardAmount = -1;
         for (int suit = 0; suit <= 3; suit++) {
@@ -228,12 +262,27 @@ public class CardSystem extends MonoBehavior {
         Collections.shuffle(cards);
     }
 
-    public void remove(){
+    public void remove() {
         cardSystemInstance = null;
     }
 
     public void setFirstTurn(int id) {
+        Collections.sort(players, new Comparator<HandCardManager>() {
+            @Override
+            public int compare(HandCardManager manager, HandCardManager t1) {
+                int a = manager.getId(), b = t1.getId();
+                if (a > b)
+                    return 1;
+                else
+                    return -1;
+            }
+        });
+
         turn = id;
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).turn = false;
+        }
+        players.get(turn).turn = true;
     }
 
     public int getTurnAmount() {
@@ -254,5 +303,17 @@ public class CardSystem extends MonoBehavior {
 
     public int getLastPlayerID() {
         return lastPlayerID;
+    }
+
+    public Card getThisMaxCard() {
+        return thisMaxCard;
+    }
+
+    public int getCardNum() {
+        return cardNum;
+    }
+
+    public int getCardNums(int i) {
+        return cardNums[i];
     }
 }

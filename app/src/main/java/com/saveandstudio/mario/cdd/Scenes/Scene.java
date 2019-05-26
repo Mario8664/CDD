@@ -10,12 +10,25 @@ import java.util.ArrayList;
 
 public class Scene {
 
-    public static ArrayList<GameObject> gameObjectsList;
+    public ArrayList<GameObject> gameObjectsList;
+    public static boolean prepared = false;
+    public boolean clear = false;
 
-    public static void prePareScene() {
+    private static Scene instantce;
+    public static Scene getInstance(){
+        if(instantce == null){
+            instantce = new Scene();
+            prepared = false;
+        }
+        return instantce;
+    }
+
+    public void prePareScene() {
+        clear = false;
         Game game = new Game();
         Player player = new Player(0, new Transform(new Vector3(GameViewInfo.centerW, GameViewInfo.centerH + 550, 0), 0,
                 Vector3.one), true, 0);
+        //player.addComponent(new AiPlayer());
         Player Rplayer1 = new Player(1, new Transform(new Vector3(GameViewInfo.centerW + 400, GameViewInfo.centerH - 50, 0), 0,
                 Vector3.one), false, 1);
         Rplayer1.addComponent(new AiPlayer());
@@ -41,14 +54,23 @@ public class Scene {
         passButton.addComponent(new BoxCollider());
         passButton.addComponent(new AutoCollider());
         passButton.addComponent(new PassButton((HandCardManager)player.getComponent(HandCardManager.class)));
-
+        prepared = true;
     }
 
-    public static void Clear(){
-        gameObjectsList.clear();
-        for (int i = 0; i < gameObjectsList.size(); i++) {
-            gameObjectsList.get(i).Destroy();
+    public void Clear(){
+        if(clear){
+            clearGameObjects();
+            clear = false;
+            instantce = null;
         }
+    }
+    public void clearGameObjects(){
+            for (int i = 0; i < gameObjectsList.size(); i++) {
+                gameObjectsList.get(i).Destroy();
+            }
+            gameObjectsList.clear();
+            instantce = null;
+
     }
 
 }

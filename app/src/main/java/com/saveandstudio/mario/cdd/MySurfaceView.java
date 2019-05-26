@@ -21,7 +21,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     //声明一条线程
     private GameThread thread;
     //线程消亡的标识位
-    private boolean flag;
+    private boolean flag = false;
     private int touchX, touchY;
     private boolean touching;
     private boolean touchDown = false;
@@ -51,7 +51,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         paint = new Paint();
 
         paint.setColor(getResources().getColor(R.color.colorPrimary));
-        Scene.prePareScene();
+        Scene.getInstance().prePareScene();
         //设置焦点
         setFocusable(true);
     }
@@ -69,6 +69,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         screenW = this.getWidth();
         screenH = this.getHeight();
         flag = true;
+        setZOrderOnTop(false);
+        setZOrderMediaOverlay(false);
 
         thread = new GameThread(getHolder(), this);
         thread.setRunning(true);
@@ -80,13 +82,16 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         try{
             paint.setColor(getResources().getColor(R.color.colorPrimary));
             canvas.drawRect(0, 0, this.getWidth(), this.getHeight(), paint);
-            if (Renderer.renderersList != null) {
-                //sort
-                Collections.sort(Renderer.renderersList);
-                //render
-                for (int i = 0; i < Renderer.renderersList.size(); i++) {
-                    Renderer.renderersList.get(i).Draw(canvas, paint);
+            synchronized (Renderer.renderersList){
+                if (Renderer.renderersList != null && !Renderer.clear) {
+                    //sort
+                    Collections.sort(Renderer.renderersList);
+                    //render
+                    for (int i = 0; i < Renderer.renderersList.size(); i++) {
+                        Renderer.renderersList.get(i).Draw(canvas, paint);
+                    }
                 }
+
             }
 
         }
@@ -126,10 +131,14 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         GameViewInfo.screenH = screenH;
         updateInput();
         //Update
-        if (Scene.gameObjectsList != null) {
-            for (int i = 0; i < Scene.gameObjectsList.size(); i++) {
-                Scene.gameObjectsList.get(i).Update();
+        synchronized (Scene.getInstance()){
+            if (Scene.getInstance().gameObjectsList != null) {
+                for (int i = 0; i < Scene.getInstance().gameObjectsList.size(); i++) {
+                    Scene.getInstance().gameObjectsList.get(i).Update();
+                }
             }
+            Scene.getInstance().Clear();
+
         }
     }
 
@@ -178,7 +187,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     class GameThread extends Thread {
         private SurfaceHolder surfaceHolder;
         private MySurfaceView gameView;
-        private boolean run = false;
+        private boolean run = false;private final Object lock = new Object();
+        private boolean pause = false;
 
         public GameThread(SurfaceHolder surfaceHolder, MySurfaceView gameView) {
             this.surfaceHolder = surfaceHolder;

@@ -21,10 +21,12 @@ public class TransformToTarget extends MonoBehavior {
     //Scale
     private Vector3 targetScale;
     private float scaleSpeed;
+    private boolean prepared = false;
 
     @Override
     public void Start() {
         transform = (Transform) getComponent(Transform.class);
+        prepared = true;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class TransformToTarget extends MonoBehavior {
     }
 
     private void move(){
-        if(move){
+        if(move && prepared){
             Vector3 originPosition = transform.getPosition();
             transform.setPosition(Vector3.lerp(originPosition, position, moveSpeed));
             if(originPosition.equal(position)){
@@ -62,7 +64,7 @@ public class TransformToTarget extends MonoBehavior {
         }
     }
     private void scale(){
-        if(scale){
+        if(scale && prepared){
             Vector3 originScale = transform.getScale();
             transform.setScale(Vector3.lerp(originScale, targetScale, scaleSpeed));
             if(originScale.equal(targetScale)){
