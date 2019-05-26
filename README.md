@@ -12,7 +12,7 @@
 
 > ###来几张截图
 
-![开始界面]https://github.com/Mario8664/CDD/blob/master/screenshot/Screenshot_20190526-185429.jpg
-![游戏界面]https://github.com/Mario8664/CDD/blob/master/screenshot/Screenshot_20190526-185438.jpg
+![开始界面](https://github.com/Mario8664/CDD/blob/master/screenshot/Screenshot_20190526-185429.jpg)
+![游戏界面](https://github.com/Mario8664/CDD/blob/master/screenshot/Screenshot_20190526-185438.jpg)
 
 
