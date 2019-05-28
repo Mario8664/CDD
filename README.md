@@ -1,10 +1,10 @@
-# 锄大地
+# 锄大地[release版apk在此](https://github.com/Mario8664/CDD/blob/master/app/release/app-release.apk)
 
 >### 简单的说明
 
 这个锄大地开发时长3周，完全开源。
 其中用到了自定义SurfaceView，进而编写了一个简单的仿照Unity的2d游戏框架。但是，事件系统、碰撞检测之类的比较耗时的组件没有实现。事实上针对这个游戏也用不到。
-[release版apk](https://github.com/Mario8664/CDD/blob/master/app/release/app-release.apk)
+
 
 >### 特别说明
 
