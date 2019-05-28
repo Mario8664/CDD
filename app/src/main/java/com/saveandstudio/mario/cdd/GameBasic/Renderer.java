@@ -103,4 +103,5 @@ public class Renderer extends MonoBehavior implements Comparable<Renderer> {
     public int getBitMapHeight() {
         return bitMapHeight;
     }
+
 }

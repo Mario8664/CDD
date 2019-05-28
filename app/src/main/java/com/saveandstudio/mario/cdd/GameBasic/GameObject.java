@@ -37,13 +37,15 @@ public class GameObject {
     public MonoBehavior getComponent(Class<? extends MonoBehavior> classInfo){
         MonoBehavior component = null;
         for (int i = 0; i < components.size(); i++) {
-            if(components.get(i).getClass().equals(classInfo)){
+            if(components.get(i).getClass().equals(classInfo) || (components.get(i).getClass().getSuperclass().equals(classInfo)
+            && !components.get(i).getClass().getSuperclass().equals(MonoBehavior.class))){
                 component = components.get(i);
             }
         }
         if(component == null)
         for (int i = 0; i < newComponents.size(); i++) {
-            if(newComponents.get(i).getClass().equals(classInfo)){
+            if(newComponents.get(i).getClass().equals(classInfo) || (newComponents.get(i).getClass().getSuperclass().equals(classInfo)
+            && !newComponents.get(i).getClass().getSuperclass().equals(MonoBehavior.class))){
                 component = newComponents.get(i);
             }
         }

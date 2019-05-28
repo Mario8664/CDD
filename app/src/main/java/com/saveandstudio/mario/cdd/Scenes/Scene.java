@@ -5,6 +5,7 @@ import com.saveandstudio.mario.cdd.GameBasic.*;
 import com.saveandstudio.mario.cdd.Prefabs.Game;
 import com.saveandstudio.mario.cdd.Prefabs.Player;
 import com.saveandstudio.mario.cdd.R;
+import com.saveandstudio.mario.cdd.Renderers.ButtonRenderer;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class Scene {
         //show card button
         GameObject showCardButton = new GameObject(new Transform(new Vector3(GameViewInfo.centerW + 170, GameViewInfo.centerH + 320, 100), 0,
                 new Vector3((float) 1.5, (float)1.5,1), Vector3.zero));
-        showCardButton.addComponent(new Renderer(R.mipmap.show_card_up));
+        showCardButton.addComponent(new ButtonRenderer(R.mipmap.show_card_up, R.mipmap.show_card_down, R.mipmap.show_card_lock));
         showCardButton.addComponent(new AutoPivot());
         showCardButton.addComponent(new BoxCollider());
         showCardButton.addComponent(new AutoCollider());
@@ -49,7 +50,7 @@ public class Scene {
         //pass button
         GameObject passButton = new GameObject(new Transform(new Vector3(GameViewInfo.centerW - 170, GameViewInfo.centerH + 320, 100), 0,
                 new Vector3((float) 1.5, (float)1.5,1), Vector3.zero));
-        passButton.addComponent(new Renderer(R.mipmap.pass_up));
+        passButton.addComponent(new ButtonRenderer(R.mipmap.pass_up, R.mipmap.pass_down, R.mipmap.pass_lock));
         passButton.addComponent(new AutoPivot());
         passButton.addComponent(new BoxCollider());
         passButton.addComponent(new AutoCollider());

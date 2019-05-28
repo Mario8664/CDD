@@ -1,14 +1,16 @@
 package com.saveandstudio.mario.cdd.Components;
 
+import android.util.Log;
 import com.saveandstudio.mario.cdd.GameBasic.*;
 import com.saveandstudio.mario.cdd.R;
+import com.saveandstudio.mario.cdd.Renderers.ButtonRenderer;
 
 public class PassButton extends MonoBehavior {
 
     BoxCollider collider;
     Transform transform;
     TransformToTarget transformToTarget;
-    Renderer renderer;
+    ButtonRenderer renderer;
     HandCardManager manager;
 
     public PassButton(HandCardManager manager){
@@ -20,23 +22,23 @@ public class PassButton extends MonoBehavior {
         collider = (BoxCollider)getComponent(BoxCollider.class);
         transform = (Transform)getComponent(Transform.class);
         transformToTarget = (TransformToTarget)getComponent(TransformToTarget.class);
-        renderer = (Renderer)getComponent(Renderer.class);
+        renderer = (ButtonRenderer)getComponent(ButtonRenderer.class);
     }
 
     @Override
     public void Update() {
         if(!manager.enablePass){
-            renderer.setBitmapResource(R.mipmap.pass_lock);
+            renderer.setDisable();
         }
         else {
-            renderer.setBitmapResource(R.mipmap.pass_up);
+            renderer.setNormal();
             if(Input.touching){
                 if(collider != null){
                     if(Physics.raycast(Input.touchPosition) == collider){
-                        renderer.setBitmapResource(R.mipmap.pass_down);
+                        renderer.setFocus();
                     }
                     else {
-                        renderer.setBitmapResource(R.mipmap.pass_up);
+                        renderer.setNormal();
                     }
                 }
 

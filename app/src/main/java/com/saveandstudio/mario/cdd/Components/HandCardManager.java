@@ -41,7 +41,7 @@ public class HandCardManager extends MonoBehavior {
             card.setManager(this);
             if (isPlayer) {
                 card.addComponent(new BoxCollider());
-                card.addComponent(new AutoCardCollider());
+                card.addComponent(new AutoCollider());
                 card.addComponent(new TouchCardEvents());
                 card.setSide(true);
             }
